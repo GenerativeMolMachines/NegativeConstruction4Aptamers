@@ -172,8 +172,12 @@ def _load_checkpoint(out: Path) -> tuple[list[dict[str, Any]], set[tuple[Any, ..
     metrics = pd.read_csv(path)
     if metrics.empty:
         return [], set()
+    if "repeat" not in metrics.columns:
+        metrics["repeat"] = 0
+    else:
+        metrics["repeat"] = metrics["repeat"].fillna(0).astype(int)
     done = {
-        (r["split_type"], int(r["fold"]), str(r["mode"]))
+        (r["split_type"], int(r["fold"]), int(r["repeat"]), str(r["mode"]))
         for _, r in metrics.iterrows()
         if not bool(r.get("skipped", False))
     }
@@ -188,10 +192,18 @@ def run_amplification_experiment(
     n_folds: int = 5,
     seed: int = 42,
     exp_fraction: float = EXP_FRACTION,
+    n_repeats: int = 1,
     resume: bool = True,
     constructed_negatives_root: str | Path,
 ) -> pd.DataFrame:
-    """Run fixed-subset amplification modes on one split type."""
+    """Run amplification modes on one split type.
+
+    ``n_repeats=1`` keeps the original single 10% subset per fold.
+    ``n_repeats>1`` redraws an independent experimental subset (and the
+    synthetic fill) per fold so subset-sampling variance is observable.
+    """
+    if n_repeats < 1:
+        raise ValueError(f"n_repeats must be >= 1, got {n_repeats}")
     root = Path(constructed_negatives_root)
     if not root.is_dir():
         raise FileNotFoundError(f"constructed_negatives_root not found: {root}")
@@ -203,7 +215,11 @@ def run_amplification_experiment(
     subset_rows: list[dict[str, Any]] = []
     subset_path = out / "fixed_exp_subsets.csv"
     if subset_path.exists():
-        subset_rows = pd.read_csv(subset_path).to_dict("records")
+        prev_sub = pd.read_csv(subset_path)
+        if "repeat" not in prev_sub.columns:
+            prev_sub["repeat"] = 0
+        subset_rows = prev_sub.to_dict("records")
+    seen_subsets = {(str(r["split_type"]), int(r["fold"]), int(r.get("repeat", 0))) for r in subset_rows}
 
     meta = {
         "protocol": AMPLIFICATION_PROTOCOL,
@@ -211,108 +227,121 @@ def run_amplification_experiment(
         "n_folds": n_folds,
         "seed": seed,
         "exp_fraction": exp_fraction,
+        "n_repeats": n_repeats,
         "modes": list(MODES),
         "constructed_negatives_root": str(root),
     }
 
-    print(f"\n=== {AMPLIFICATION_PROTOCOL}: {split_type} ===", flush=True)
+    print(
+        f"\n=== {AMPLIFICATION_PROTOCOL}: {split_type} repeats={n_repeats} ===",
+        flush=True,
+    )
 
     for fold, split in enumerate(folds):
         print(f"\n--- {split_type}/fold{fold} ---", flush=True)
-        rng = np.random.default_rng(seed + fold)
         target_n = len(split.train_neg_exp)
         exp_test_eval = _labeled_eval(split.test_pos, split.test_neg_exp)
-
-        subset = fixed_exp_subset(split.train_neg_exp, exp_fraction=exp_fraction, rng=rng)
-        subset_rows.append(
-            {
-                "split_type": split_type,
-                "fold": fold,
-                "n_train_neg_exp_total": target_n,
-                "n_subset_exp": len(subset),
-                "exp_fraction_target": exp_fraction,
-                "seed": seed + fold,
-            }
-        )
-        print(f"  fixed subset: {len(subset)}/{target_n} experimental negatives", flush=True)
-
         syn_pools = _build_synthetic_pools(
             split_type=split_type,
             fold=fold,
             constructed_negatives_root=root,
         )
 
-        for mode in MODES:
-            ck = (split_type, fold, mode)
-            if ck in done:
-                continue
-
-            row_base = {
-                "protocol": AMPLIFICATION_PROTOCOL,
-                "split_type": split_type,
-                "fold": fold,
-                "mode": mode,
-                "exp_fraction": exp_fraction,
-                "n_train_pos": len(split.train_pos),
-                "n_target_neg": target_n,
-                "n_subset_exp": len(subset),
-            }
-
-            syn_pool: pd.DataFrame | None = None
-            if mode == "exp_10_plus_rp":
-                syn_pool = syn_pools.get("random_pairing", pd.DataFrame())
-            elif mode == "exp_10_plus_generated":
-                syn_pool = syn_pools.get("learned_generated", pd.DataFrame())
-
-            try:
-                train_neg, n_exp, n_syn = amplification_train_negatives(
-                    subset,
-                    mode=mode,
-                    total_n=target_n,
-                    synthetic_pool=syn_pool,
-                    rng=rng,
-                )
-            except ValueError as exc:
-                metric_rows.append(
+        for repeat in range(n_repeats):
+            draw_seed = (seed + fold) if n_repeats == 1 else (seed + fold * 10_000 + repeat)
+            rng = np.random.default_rng(draw_seed)
+            subset = fixed_exp_subset(split.train_neg_exp, exp_fraction=exp_fraction, rng=rng)
+            sub_key = (split_type, fold, repeat)
+            if sub_key not in seen_subsets:
+                subset_rows.append(
                     {
-                        **row_base,
-                        "skipped": True,
-                        "skip_reason": str(exc),
-                        "n_train_neg": 0,
-                        "n_train_neg_experimental": 0,
-                        "n_train_neg_synthetic": 0,
+                        "split_type": split_type,
+                        "fold": fold,
+                        "repeat": repeat,
+                        "n_train_neg_exp_total": target_n,
+                        "n_subset_exp": len(subset),
+                        "exp_fraction_target": exp_fraction,
+                        "seed": draw_seed,
                     }
+                )
+                seen_subsets.add(sub_key)
+            print(
+                f"  repeat {repeat}: subset {len(subset)}/{target_n} experimental negatives",
+                flush=True,
+            )
+
+            for mode in MODES:
+                ck = (split_type, fold, repeat, mode)
+                if ck in done:
+                    continue
+
+                row_base = {
+                    "protocol": AMPLIFICATION_PROTOCOL,
+                    "split_type": split_type,
+                    "fold": fold,
+                    "repeat": repeat,
+                    "mode": mode,
+                    "exp_fraction": exp_fraction,
+                    "n_train_pos": len(split.train_pos),
+                    "n_target_neg": target_n,
+                    "n_subset_exp": len(subset),
+                }
+
+                syn_pool: pd.DataFrame | None = None
+                if mode == "exp_10_plus_rp":
+                    syn_pool = syn_pools.get("random_pairing", pd.DataFrame())
+                elif mode == "exp_10_plus_generated":
+                    syn_pool = syn_pools.get("learned_generated", pd.DataFrame())
+
+                try:
+                    train_neg, n_exp, n_syn = amplification_train_negatives(
+                        subset,
+                        mode=mode,
+                        total_n=target_n,
+                        synthetic_pool=syn_pool,
+                        rng=rng,
+                    )
+                except ValueError as exc:
+                    metric_rows.append(
+                        {
+                            **row_base,
+                            "skipped": True,
+                            "skip_reason": str(exc),
+                            "n_train_neg": 0,
+                            "n_train_neg_experimental": 0,
+                            "n_train_neg_synthetic": 0,
+                        }
+                    )
+                    done.add(ck)
+                    _save_checkpoint(out, pd.DataFrame(metric_rows), subset_rows, meta)
+                    print(f"  SKIP {mode}: {exc}", flush=True)
+                    continue
+
+                metric_rows.append(
+                    _eval_cell(
+                        row_base,
+                        split.train_pos,
+                        train_neg,
+                        n_exp=n_exp,
+                        n_syn=n_syn,
+                        exp_test_eval=exp_test_eval,
+                        df=df,
+                        split_type=split_type,
+                        seed=draw_seed,
+                    )
                 )
                 done.add(ck)
                 _save_checkpoint(out, pd.DataFrame(metric_rows), subset_rows, meta)
-                print(f"  SKIP {mode}: {exc}", flush=True)
-                continue
-
-            metric_rows.append(
-                _eval_cell(
-                    row_base,
-                    split.train_pos,
-                    train_neg,
-                    n_exp=n_exp,
-                    n_syn=n_syn,
-                    exp_test_eval=exp_test_eval,
-                    df=df,
-                    split_type=split_type,
-                    seed=seed + fold,
-                )
-            )
-            done.add(ck)
-            _save_checkpoint(out, pd.DataFrame(metric_rows), subset_rows, meta)
-            last = metric_rows[-1]
-            if last.get("skipped"):
-                print(f"  SKIP {mode}: {last.get('skip_reason')}", flush=True)
-            else:
-                print(
-                    f"  {mode} (neg={last['n_train_neg']}, "
-                    f"exp={last['n_train_neg_experimental']}, syn={last['n_train_neg_synthetic']}): "
-                    f"AUC={last['test_roc_auc']:.4f}",
-                    flush=True,
-                )
+                last = metric_rows[-1]
+                if last.get("skipped"):
+                    print(f"  SKIP {mode}: {last.get('skip_reason')}", flush=True)
+                else:
+                    print(
+                        f"  {mode} (neg={last['n_train_neg']}, "
+                        f"exp={last['n_train_neg_experimental']}, syn={last['n_train_neg_synthetic']}): "
+                        f"AUC={last['test_roc_auc']:.4f}",
+                        flush=True,
+                    )
 
     metrics = pd.DataFrame(metric_rows)
     _save_checkpoint(out, metrics, subset_rows, meta)
@@ -320,14 +349,72 @@ def run_amplification_experiment(
 
 
 def summarize_amplification(metrics: pd.DataFrame) -> pd.DataFrame:
+    """Mean ± std ROC-AUC by mode.
+
+    With ``repeat``, std is over fold×subset cells, not folds alone.
+    """
     if metrics.empty:
-        return pd.DataFrame(columns=["mode", "mean_roc_auc", "std_roc_auc", "n_folds"])
+        return pd.DataFrame(columns=["mode", "mean_roc_auc", "std_roc_auc", "n_cells", "n_folds", "n_repeats"])
     skipped = metrics.get("skipped", pd.Series(False, index=metrics.index)).fillna(False).astype(bool)
     ok = metrics.loc[~skipped].copy()
     if ok.empty:
-        return pd.DataFrame(columns=["mode", "mean_roc_auc", "std_roc_auc", "n_folds"])
-    g = ok.groupby("mode", as_index=False)["test_roc_auc"]
-    summary = g.agg(mean_roc_auc="mean", std_roc_auc="std", n_folds="count")
+        return pd.DataFrame(columns=["mode", "mean_roc_auc", "std_roc_auc", "n_cells", "n_folds", "n_repeats"])
+    if "repeat" not in ok.columns:
+        ok["repeat"] = 0
+    rows = []
+    for mode, g in ok.groupby("mode", sort=False):
+        within = g.groupby("fold")["test_roc_auc"].std()
+        rows.append(
+            {
+                "mode": mode,
+                "mean_roc_auc": float(g["test_roc_auc"].mean()),
+                "std_roc_auc": float(g["test_roc_auc"].std(ddof=1)) if len(g) > 1 else 0.0,
+                "n_cells": int(len(g)),
+                "n_folds": int(g["fold"].nunique()),
+                "n_repeats": int(g["repeat"].nunique()),
+                "mean_within_fold_std": float(within.mean()) if within.notna().any() else float("nan"),
+            }
+        )
+    summary = pd.DataFrame(rows)
     mode_order = {m: i for i, m in enumerate(MODES)}
     summary["_ord"] = summary["mode"].map(mode_order)
     return summary.sort_values("_ord").drop(columns=["_ord"]).reset_index(drop=True)
+
+
+def summarize_paired_subset_deltas(metrics: pd.DataFrame, *, reference_mode: str = "exp_10_only") -> pd.DataFrame:
+    """Paired AUC(mode) − AUC(reference) on the same fold and subset draw."""
+    cols = ["mode", "mean_delta", "std_delta", "n_pairs", "frac_positive_delta"]
+    if metrics.empty:
+        return pd.DataFrame(columns=cols)
+    skipped = metrics.get("skipped", pd.Series(False, index=metrics.index)).fillna(False).astype(bool)
+    ok = metrics.loc[~skipped].copy()
+    if ok.empty or "test_roc_auc" not in ok.columns:
+        return pd.DataFrame(columns=cols)
+    if "repeat" not in ok.columns:
+        ok["repeat"] = 0
+    ref = ok.loc[ok["mode"].astype(str) == reference_mode, ["split_type", "fold", "repeat", "test_roc_auc"]]
+    ref = ref.rename(columns={"test_roc_auc": "ref_auc"})
+    if ref.empty:
+        return pd.DataFrame(columns=cols)
+    rows = []
+    for mode, g in ok.groupby("mode", sort=False):
+        merged = g.merge(ref, on=["split_type", "fold", "repeat"], how="inner")
+        if merged.empty:
+            continue
+        delta = merged["test_roc_auc"].astype(float) - merged["ref_auc"].astype(float)
+        rows.append(
+            {
+                "mode": mode,
+                "reference_mode": reference_mode,
+                "mean_delta": float(delta.mean()),
+                "std_delta": float(delta.std(ddof=1)) if len(delta) > 1 else 0.0,
+                "n_pairs": int(len(delta)),
+                "frac_positive_delta": float((delta > 0).mean()),
+            }
+        )
+    out = pd.DataFrame(rows)
+    if out.empty:
+        return pd.DataFrame(columns=cols)
+    mode_order = {m: i for i, m in enumerate(MODES)}
+    out["_ord"] = out["mode"].map(mode_order)
+    return out.sort_values("_ord").drop(columns=["_ord"]).reset_index(drop=True)

@@ -10,7 +10,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from amplification_experiment import run_amplification_experiment, summarize_amplification
+from amplification_experiment import (
+    run_amplification_experiment,
+    summarize_amplification,
+    summarize_paired_subset_deltas,
+)
 
 DEFAULT_DATA = ROOT / "data" / "aptabench" / "embeddings" / "aptabench_with_embeddings_v3_clamp.parquet"
 DEFAULT_CONSTRUCTED = ROOT / "data" / "constructed_negatives" / "ere_official_scaled_v1"
@@ -26,6 +30,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--n-folds", type=int, default=5)
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--exp-fraction", type=float, default=0.1)
+    p.add_argument("--n-repeats", type=int, default=1)
     p.add_argument("--no-resume", action="store_true")
     return p.parse_args()
 
@@ -40,11 +45,13 @@ def main() -> None:
         n_folds=args.n_folds,
         seed=args.seed,
         exp_fraction=args.exp_fraction,
+        n_repeats=args.n_repeats,
         resume=not args.no_resume,
         constructed_negatives_root=Path(args.constructed_root),
     )
     summary = summarize_amplification(metrics)
     summary.to_csv(out / "amplification_summary.csv", index=False)
+    summarize_paired_subset_deltas(metrics).to_csv(out / "amplification_paired_deltas.csv", index=False)
 
     print("\n=== Amplification summary (ROC-AUC mean ± std) ===")
     for _, row in summary.iterrows():

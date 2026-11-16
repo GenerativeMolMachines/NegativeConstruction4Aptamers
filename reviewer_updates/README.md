@@ -2,6 +2,15 @@
 
 These CSVs accompany the revised paper. The original AptaBench ERE protocol and pre-exported fold data remain in the repository root.
 
+To reproduce the added analyses from the repository root:
+
+```bash
+python scripts/04_run_amplification.py --n-repeats 10 --out results/amplification_repeats10_v1
+python scripts/run_provenance_official_folds.py --out results/provenance_official_folds_v1
+```
+
+The provenance runner uses the released official folds; its additional split logic is in `src/provenance_splits.py`. The optional `scripts/run_provenance_source_disjoint.py` performs a global source holdout and should not be confused with the official-fold sensitivity analysis.
+
 ## Repeated 10% experimental-negative subsets
 
 - `results/amplification_metrics.csv`: one row per fold, redraw, and training mode (200 rows).
