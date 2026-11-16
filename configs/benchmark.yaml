@@ -1,0 +1,38 @@
+# Default ERE + extended experiments (official AptaBench folds)
+seed: 42
+n_folds: 5
+split_types: [random, aptamer, molecule]
+methods:
+  - random_sequence
+  - composition_shuffle
+  - random_pairing
+  - structure_filtered
+  - hard_negative
+  - learned_generated
+  - experimental
+features:
+  random: {aptamer: kmer4, molecule: clamp}
+  aptamer: {aptamer: kmer4, molecule: chemberta}
+  molecule: {aptamer: onehot, molecule: morgan}
+negatives:
+  match_ligand_distribution: true
+  match_size_to_experimental: true
+  lgbm_hard_score: true
+  standard_scaler: true
+generation:
+  summary_csv: data/aptabench/generation/train_fold_generation_summary.csv
+constructed_negatives: data/constructed_negatives/ere_official_scaled_v1
+amplification_summary: data/amplification/amplification_summary.csv
+outputs:
+  ere_stratified: results/ere_official_v1
+  ere: results/ere_official_scaled_v1
+  mix_fraction_retrain: results/ere_fraction_retrain_v1
+  blend_volume: results/ere_blend_volume_v1
+  figures: results/figures
+protocols:
+  mix: fraction_retrain_v2
+  blend_volume: blend_volume_v1
+data:
+  official_table: data/aptabench/dataset/AptaBench_dataset.csv
+  official_splits: data/aptabench/dataset/splits
+  embeddings_parquet: data/aptabench/embeddings/aptabench_with_embeddings_v3_clamp.parquet

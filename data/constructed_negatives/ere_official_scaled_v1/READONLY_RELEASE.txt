@@ -1,0 +1,12 @@
+READ-ONLY PAPER RELEASE
+
+run_id: ere_official_scaled_v1
+
+Do not regenerate or overwrite files in this directory.
+Paper metrics load these CSVs as-is (constructed_only mode).
+
+Original export (manifest.json): aptamer + molecule splits in by_fold.
+Stratified pools live under by_fold/random/.
+
+Derived append-only: volume_pools/ (bootstrap-expanded from train CSV;
+see volume_pools/manifest.json). Do not edit by_fold/train/*.csv.

@@ -1,0 +1,15 @@
+pandas>=2.0
+numpy>=1.24
+torch>=2.0
+scipy>=1.10
+scikit-learn>=1.3
+pytest>=7.0
+lightgbm
+rdkit
+matplotlib>=3.7
+seaborn>=0.13
+pyarrow>=14.0
+transformers>=4.36
+tqdm>=4.66
+python-Levenshtein>=0.25
+# Optional: ViennaRNA for AptaBLE-style structure filtering (pip install ViennaRNA)

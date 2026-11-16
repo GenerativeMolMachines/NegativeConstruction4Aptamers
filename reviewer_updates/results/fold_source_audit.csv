@@ -1,0 +1,121 @@
+split_type,fold,held_out_source,skipped,skip_reason,n_train_pos,n_train_neg,n_test_pos,n_test_neg,n_train_pos_before_entity_filter,n_train_neg_before_entity_filter,n_test_molecules_in_train,n_test_aptamers_in_train,n_test_pairs_in_train,n_train_rows_same_source
+stratified,0,AptaDB,True,test_too_small,2005,2310,67,0,2320,2420,0,0,0,0
+stratified,0,AptaGen,True,test_too_small,2169,2212,29,0,2459,2416,0,0,0,0
+stratified,0,Aptamer Base,True,test_too_small,2214,2318,57,0,2342,2410,0,0,0,0
+stratified,0,Manual,True,test_too_small,1931,2122,118,16,2102,2368,0,0,0,0
+stratified,0,RSAPred,False,,1694,2230,175,44,1819,2234,0,0,0,0
+stratified,0,Ribocentre,True,test_too_small,2302,2335,11,0,2504,2420,0,0,0,0
+stratified,0,Specificity,False,,1807,248,151,564,1848,260,0,0,0,0
+stratified,0,UTexas,True,test_too_small,2285,2385,17,0,2491,2412,0,0,0,0
+stratified,1,AptaDB,True,test_too_small,2080,2417,57,0,2323,2427,0,0,0,0
+stratified,1,AptaGen,True,test_too_small,2223,2295,25,1,2468,2424,0,0,0,0
+stratified,1,Aptamer Base,True,test_too_small,2196,2322,54,1,2352,2418,0,0,0,0
+stratified,1,Manual,True,test_too_small,1940,2233,113,15,2110,2374,0,0,0,0
+stratified,1,RSAPred,False,,1718,2244,166,50,1823,2247,0,0,0,0
+stratified,1,Ribocentre,True,test_too_small,2416,2417,13,0,2519,2427,0,0,0,0
+stratified,1,Specificity,False,,1834,235,169,546,1879,249,0,0,0,0
+stratified,1,UTexas,True,test_too_small,2335,2392,15,4,2502,2423,0,0,0,0
+stratified,2,AptaDB,True,test_too_small,2055,2441,58,0,2275,2449,0,0,0,0
+stratified,2,AptaGen,True,test_too_small,2182,2366,21,2,2415,2447,0,0,0,0
+stratified,2,Aptamer Base,True,test_too_small,2168,2369,48,3,2297,2442,0,0,0,0
+stratified,2,Manual,True,test_too_small,1977,2317,122,16,2070,2397,0,0,0,0
+stratified,2,RSAPred,False,,1651,2161,196,39,1804,2258,0,0,0,0
+stratified,2,Ribocentre,True,test_too_small,2442,2446,14,0,2471,2449,0,0,0,0
+stratified,2,Specificity,False,,1794,251,182,535,1843,260,0,0,0,0
+stratified,2,UTexas,True,test_too_small,2368,2438,20,0,2458,2441,0,0,0,0
+stratified,3,AptaDB,True,test_too_small,1998,2411,61,0,2303,2442,0,0,0,0
+stratified,3,AptaGen,True,test_too_small,2202,2313,25,0,2444,2438,0,0,0,0
+stratified,3,Aptamer Base,True,test_too_small,2237,2369,60,4,2334,2436,0,0,0,0
+stratified,3,Manual,True,test_too_small,1983,2298,109,7,2082,2381,0,0,0,0
+stratified,3,RSAPred,False,,1721,2239,185,42,1818,2254,0,0,0,0
+stratified,3,Ribocentre,True,test_too_small,2378,2414,16,0,2498,2442,0,0,0,0
+stratified,3,Specificity,False,,1809,252,168,546,1854,264,0,0,0,0
+stratified,3,UTexas,True,test_too_small,2296,2384,12,3,2475,2437,0,0,0,0
+stratified,4,AptaDB,True,test_too_small,2041,2322,59,0,2291,2438,0,0,0,0
+stratified,4,AptaGen,True,test_too_small,2141,2307,25,1,2434,2435,0,0,0,0
+stratified,4,Aptamer Base,True,test_too_small,2227,2379,51,2,2315,2430,0,0,0,0
+stratified,4,Manual,True,test_too_small,1956,2307,109,14,2072,2384,0,0,0,0
+stratified,4,RSAPred,False,,1727,2261,189,55,1812,2263,0,0,0,0
+stratified,4,Ribocentre,True,test_too_small,2343,2409,8,0,2480,2438,0,0,0,0
+stratified,4,Specificity,False,,1813,234,188,533,1864,247,0,0,0,0
+stratified,4,UTexas,True,test_too_small,2290,2405,17,1,2470,2431,0,0,0,0
+aptamer,0,AptaDB,True,test_too_small,1888,2660,109,0,2163,2762,0,0,0,0
+aptamer,0,AptaGen,True,test_too_small,2000,2562,32,1,2263,2759,0,0,0,0
+aptamer,0,Aptamer Base,True,test_too_small,2082,2642,112,1,2198,2753,0,0,0,0
+aptamer,0,Manual,True,test_too_small,1818,2473,144,16,1929,2710,0,0,0,0
+aptamer,0,RSAPred,False,,1549,2570,336,140,1781,2672,0,0,0,0
+aptamer,0,Ribocentre,True,test_too_small,2188,2732,18,0,2312,2762,0,0,0,0
+aptamer,0,Specificity,False,,1516,155,40,122,1538,160,0,0,0,0
+aptamer,0,UTexas,True,test_too_small,2151,2698,33,2,2308,2756,0,0,0,0
+aptamer,1,AptaDB,True,test_too_small,2073,2564,88,0,2274,2640,0,0,0,0
+aptamer,1,AptaGen,True,test_too_small,2251,2591,30,3,2393,2639,0,0,0,0
+aptamer,1,Aptamer Base,True,test_too_small,2234,2580,96,7,2314,2637,0,0,0,0
+aptamer,1,Manual,True,test_too_small,1940,2422,186,3,2103,2575,0,0,0,0
+aptamer,1,RSAPred,False,,1703,2432,137,22,1714,2432,0,0,0,0
+aptamer,1,Ribocentre,True,test_too_small,2339,2600,29,0,2455,2640,0,0,0,0
+aptamer,1,Specificity,False,,1704,268,105,364,1735,280,0,0,0,0
+aptamer,1,UTexas,True,test_too_small,2300,2627,21,5,2428,2637,0,0,0,0
+aptamer,2,AptaDB,True,test_too_small,1846,2797,104,0,2036,2899,0,0,0,0
+aptamer,2,AptaGen,True,test_too_small,1865,2777,49,0,2158,2895,0,0,0,0
+aptamer,2,Aptamer Base,True,test_too_small,1885,2721,62,2,2026,2891,0,0,0,0
+aptamer,2,Manual,False,,1784,2747,241,49,1904,2880,0,0,0,0
+aptamer,2,RSAPred,False,,1695,2727,438,68,1761,2737,0,0,0,0
+aptamer,2,Ribocentre,True,test_too_small,2072,2820,15,0,2187,2899,0,0,0,0
+aptamer,2,Specificity,True,test_too_small,1371,198,10,25,1386,200,0,0,0,0
+aptamer,2,UTexas,True,test_too_small,2050,2851,27,1,2180,2892,0,0,0,0
+aptamer,3,AptaDB,True,test_too_small,2562,1819,1,0,2562,1819,0,0,0,0
+aptamer,3,AptaGen,True,test_too_small,2742,1814,8,0,2746,1815,0,0,0,0
+aptamer,3,Aptamer Base,True,test_too_small,2593,1809,0,0,2593,1809,0,0,0,0
+aptamer,3,Manual,True,test_too_small,2292,1751,0,0,2292,1751,0,0,0,0
+aptamer,3,RSAPred,True,test_too_small,1952,1589,0,0,1952,1589,0,0,0,0
+aptamer,3,Ribocentre,True,test_too_small,2801,1819,0,0,2801,1819,0,0,0,0
+aptamer,3,Specificity,False,,2275,305,308,1225,2313,320,0,0,0,0
+aptamer,3,UTexas,True,test_too_small,2782,1811,0,0,2782,1811,0,0,0,0
+aptamer,4,AptaDB,True,test_too_small,2477,2056,0,0,2477,2056,0,0,0,0
+aptamer,4,AptaGen,True,test_too_small,2659,2051,6,0,2660,2052,0,0,0,0
+aptamer,4,Aptamer Base,True,test_too_small,2509,2046,0,0,2509,2046,0,0,0,0
+aptamer,4,Manual,True,test_too_small,2208,1988,0,0,2208,1988,0,0,0,0
+aptamer,4,RSAPred,True,test_too_small,1868,1826,0,0,1868,1826,0,0,0,0
+aptamer,4,Ribocentre,True,test_too_small,2717,2056,0,0,2717,2056,0,0,0,0
+aptamer,4,Specificity,False,,2287,309,395,988,2316,320,0,0,0,0
+aptamer,4,UTexas,True,test_too_small,2698,2048,0,0,2698,2048,0,0,0,0
+molecule,0,AptaDB,True,test_too_small,2560,2133,25,0,2564,2133,0,0,0,0
+molecule,0,AptaGen,True,test_too_small,2727,2080,23,0,2737,2124,0,0,0,0
+molecule,0,Aptamer Base,True,test_too_small,2596,2124,16,1,2596,2124,0,0,0,0
+molecule,0,Manual,True,test_too_small,2311,2065,25,0,2313,2065,0,0,0,0
+molecule,0,RSAPred,True,test_too_small,1952,1904,4,1,1952,1904,0,0,0,0
+molecule,0,Ribocentre,True,test_too_small,2799,2133,3,0,2799,2133,0,0,0,0
+molecule,0,Specificity,False,,2267,322,279,913,2280,322,0,0,0,0
+molecule,0,UTexas,True,test_too_small,2772,2126,6,1,2772,2126,0,0,0,0
+molecule,1,AptaDB,True,test_too_small,2275,2449,21,0,2293,2449,0,0,0,0
+molecule,1,AptaGen,True,test_too_small,2448,2334,28,0,2475,2440,0,0,0,0
+molecule,1,Aptamer Base,True,test_too_small,2374,2437,64,0,2377,2439,0,0,0,0
+molecule,1,Manual,True,test_too_small,2080,2389,88,11,2109,2392,0,0,0,0
+molecule,1,RSAPred,False,,1884,2284,211,68,1892,2287,0,0,0,0
+molecule,1,Ribocentre,True,test_too_small,2536,2448,15,0,2544,2449,0,0,0,0
+molecule,1,Specificity,False,,1930,245,205,520,1939,245,0,0,0,0
+molecule,1,UTexas,True,test_too_small,2511,2442,16,1,2515,2442,0,0,0,0
+molecule,2,AptaDB,True,test_too_small,2215,2536,78,0,2255,2544,0,0,0,0
+molecule,2,AptaGen,True,test_too_small,2360,2479,40,0,2392,2535,0,0,0,0
+molecule,2,Aptamer Base,True,test_too_small,2274,2534,56,0,2274,2534,0,0,0,0
+molecule,2,Manual,False,,2049,2512,130,36,2056,2512,0,0,0,0
+molecule,2,RSAPred,False,,1796,2366,219,55,1805,2369,0,0,0,0
+molecule,2,Ribocentre,True,test_too_small,2450,2544,16,0,2450,2544,0,0,0,0
+molecule,2,Specificity,False,,1806,232,179,412,1818,232,0,0,0,0
+molecule,2,UTexas,True,test_too_small,2428,2538,25,2,2429,2538,0,0,0,0
+molecule,3,AptaDB,True,test_too_small,2289,2543,116,0,2294,2543,0,0,0,0
+molecule,3,AptaGen,True,test_too_small,2378,2543,29,9,2382,2543,0,0,0,0
+molecule,3,Aptamer Base,True,test_too_small,2310,2540,91,7,2310,2540,0,0,0,0
+molecule,3,Manual,True,test_too_small,2106,2480,183,5,2110,2480,0,0,0,0
+molecule,3,RSAPred,False,,1773,2365,194,52,1781,2365,0,0,0,0
+molecule,3,Ribocentre,True,test_too_small,2448,2543,13,0,2448,2543,0,0,0,0
+molecule,3,Specificity,False,,1704,249,80,430,1720,249,0,0,0,0
+molecule,3,UTexas,True,test_too_small,2441,2538,36,3,2441,2538,0,0,0,0
+molecule,4,AptaDB,True,test_too_small,2260,2527,80,0,2274,2527,0,0,0,0
+molecule,4,AptaGen,True,test_too_small,2386,2518,25,0,2394,2518,0,0,0,0
+molecule,4,Aptamer Base,True,test_too_small,2287,2519,52,2,2287,2519,0,0,0,0
+molecule,4,Manual,True,test_too_small,2073,2474,145,16,2088,2475,0,0,0,0
+molecule,4,RSAPred,False,,1884,2351,283,54,1886,2351,0,0,0,0
+molecule,4,Ribocentre,True,test_too_small,2461,2526,16,0,2467,2527,0,0,0,0
+molecule,4,Specificity,False,,1754,252,115,449,1771,252,0,0,0,0
+molecule,4,UTexas,True,test_too_small,2428,2520,10,1,2431,2520,0,0,0,0

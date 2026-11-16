@@ -1,0 +1,853 @@
+{
+  "derived_from": "data/constructed_negatives/ere_official_scaled_v1/by_fold",
+  "purpose": "Volume-arm synthetic pools (n_syn = r * |train_pos|); bootstrap-expanded from train CSV",
+  "created_utc": "2026-08-28T00:37:08.401104+00:00",
+  "seed": 42,
+  "volume_ratios": [
+    0.25,
+    0.5,
+    1.0,
+    2.0,
+    4.0
+  ],
+  "methods": [
+    "random_sequence",
+    "composition_shuffle",
+    "random_pairing",
+    "structure_filtered",
+    "hard_negative",
+    "learned_generated"
+  ],
+  "split_types": [
+    "random",
+    "aptamer",
+    "molecule"
+  ],
+  "n_folds": 5,
+  "data_stats": {
+    "path": "data/aptabench/embeddings/aptabench_with_embeddings_v3_clamp.parquet",
+    "official_table": "data/aptabench/dataset/AptaBench_dataset.csv",
+    "split_source": "aptabench_official_json",
+    "raw_rows": 6289,
+    "clean_rows": 6289,
+    "n_pos": 3240,
+    "n_neg": 3049,
+    "conflicting_rows_dropped": 0,
+    "n_molecules": 942,
+    "n_aptamers": 1605,
+    "rows_with_smiles_embeddings": 6224,
+    "embeddings_csv_rows": 6413
+  },
+  "rows": [
+    {
+      "split_type": "random",
+      "fold": 0,
+      "method": "random_sequence",
+      "n_rows": 10228,
+      "target_n": 10228,
+      "n_train_pos": 2555,
+      "n_train_neg_exp": 2420
+    },
+    {
+      "split_type": "random",
+      "fold": 0,
+      "method": "composition_shuffle",
+      "n_rows": 10228,
+      "target_n": 10228,
+      "n_train_pos": 2555,
+      "n_train_neg_exp": 2420
+    },
+    {
+      "split_type": "random",
+      "fold": 0,
+      "method": "random_pairing",
+      "n_rows": 10228,
+      "target_n": 10228,
+      "n_train_pos": 2555,
+      "n_train_neg_exp": 2420
+    },
+    {
+      "split_type": "random",
+      "fold": 0,
+      "method": "structure_filtered",
+      "n_rows": 10228,
+      "target_n": 10228,
+      "n_train_pos": 2555,
+      "n_train_neg_exp": 2420
+    },
+    {
+      "split_type": "random",
+      "fold": 0,
+      "method": "hard_negative",
+      "n_rows": 10228,
+      "target_n": 10228,
+      "n_train_pos": 2555,
+      "n_train_neg_exp": 2420
+    },
+    {
+      "split_type": "random",
+      "fold": 0,
+      "method": "learned_generated",
+      "n_rows": 10228,
+      "target_n": 10228,
+      "n_train_pos": 2555,
+      "n_train_neg_exp": 2420
+    },
+    {
+      "split_type": "random",
+      "fold": 1,
+      "method": "random_sequence",
+      "n_rows": 10280,
+      "target_n": 10280,
+      "n_train_pos": 2568,
+      "n_train_neg_exp": 2427
+    },
+    {
+      "split_type": "random",
+      "fold": 1,
+      "method": "composition_shuffle",
+      "n_rows": 10280,
+      "target_n": 10280,
+      "n_train_pos": 2568,
+      "n_train_neg_exp": 2427
+    },
+    {
+      "split_type": "random",
+      "fold": 1,
+      "method": "random_pairing",
+      "n_rows": 10280,
+      "target_n": 10280,
+      "n_train_pos": 2568,
+      "n_train_neg_exp": 2427
+    },
+    {
+      "split_type": "random",
+      "fold": 1,
+      "method": "structure_filtered",
+      "n_rows": 10280,
+      "target_n": 10280,
+      "n_train_pos": 2568,
+      "n_train_neg_exp": 2427
+    },
+    {
+      "split_type": "random",
+      "fold": 1,
+      "method": "hard_negative",
+      "n_rows": 10280,
+      "target_n": 10280,
+      "n_train_pos": 2568,
+      "n_train_neg_exp": 2427
+    },
+    {
+      "split_type": "random",
+      "fold": 1,
+      "method": "learned_generated",
+      "n_rows": 10280,
+      "target_n": 10280,
+      "n_train_pos": 2568,
+      "n_train_neg_exp": 2427
+    },
+    {
+      "split_type": "random",
+      "fold": 2,
+      "method": "random_sequence",
+      "n_rows": 10084,
+      "target_n": 10084,
+      "n_train_pos": 2519,
+      "n_train_neg_exp": 2449
+    },
+    {
+      "split_type": "random",
+      "fold": 2,
+      "method": "composition_shuffle",
+      "n_rows": 10084,
+      "target_n": 10084,
+      "n_train_pos": 2519,
+      "n_train_neg_exp": 2449
+    },
+    {
+      "split_type": "random",
+      "fold": 2,
+      "method": "random_pairing",
+      "n_rows": 10084,
+      "target_n": 10084,
+      "n_train_pos": 2519,
+      "n_train_neg_exp": 2449
+    },
+    {
+      "split_type": "random",
+      "fold": 2,
+      "method": "structure_filtered",
+      "n_rows": 10084,
+      "target_n": 10084,
+      "n_train_pos": 2519,
+      "n_train_neg_exp": 2449
+    },
+    {
+      "split_type": "random",
+      "fold": 2,
+      "method": "hard_negative",
+      "n_rows": 10084,
+      "target_n": 10084,
+      "n_train_pos": 2519,
+      "n_train_neg_exp": 2449
+    },
+    {
+      "split_type": "random",
+      "fold": 2,
+      "method": "learned_generated",
+      "n_rows": 10084,
+      "target_n": 10084,
+      "n_train_pos": 2519,
+      "n_train_neg_exp": 2449
+    },
+    {
+      "split_type": "random",
+      "fold": 3,
+      "method": "random_sequence",
+      "n_rows": 10184,
+      "target_n": 10184,
+      "n_train_pos": 2544,
+      "n_train_neg_exp": 2442
+    },
+    {
+      "split_type": "random",
+      "fold": 3,
+      "method": "composition_shuffle",
+      "n_rows": 10184,
+      "target_n": 10184,
+      "n_train_pos": 2544,
+      "n_train_neg_exp": 2442
+    },
+    {
+      "split_type": "random",
+      "fold": 3,
+      "method": "random_pairing",
+      "n_rows": 10184,
+      "target_n": 10184,
+      "n_train_pos": 2544,
+      "n_train_neg_exp": 2442
+    },
+    {
+      "split_type": "random",
+      "fold": 3,
+      "method": "structure_filtered",
+      "n_rows": 10184,
+      "target_n": 10184,
+      "n_train_pos": 2544,
+      "n_train_neg_exp": 2442
+    },
+    {
+      "split_type": "random",
+      "fold": 3,
+      "method": "hard_negative",
+      "n_rows": 10184,
+      "target_n": 10184,
+      "n_train_pos": 2544,
+      "n_train_neg_exp": 2442
+    },
+    {
+      "split_type": "random",
+      "fold": 3,
+      "method": "learned_generated",
+      "n_rows": 10184,
+      "target_n": 10184,
+      "n_train_pos": 2544,
+      "n_train_neg_exp": 2442
+    },
+    {
+      "split_type": "random",
+      "fold": 4,
+      "method": "random_sequence",
+      "n_rows": 10144,
+      "target_n": 10144,
+      "n_train_pos": 2534,
+      "n_train_neg_exp": 2438
+    },
+    {
+      "split_type": "random",
+      "fold": 4,
+      "method": "composition_shuffle",
+      "n_rows": 10144,
+      "target_n": 10144,
+      "n_train_pos": 2534,
+      "n_train_neg_exp": 2438
+    },
+    {
+      "split_type": "random",
+      "fold": 4,
+      "method": "random_pairing",
+      "n_rows": 10144,
+      "target_n": 10144,
+      "n_train_pos": 2534,
+      "n_train_neg_exp": 2438
+    },
+    {
+      "split_type": "random",
+      "fold": 4,
+      "method": "structure_filtered",
+      "n_rows": 10144,
+      "target_n": 10144,
+      "n_train_pos": 2534,
+      "n_train_neg_exp": 2438
+    },
+    {
+      "split_type": "random",
+      "fold": 4,
+      "method": "hard_negative",
+      "n_rows": 10144,
+      "target_n": 10144,
+      "n_train_pos": 2534,
+      "n_train_neg_exp": 2438
+    },
+    {
+      "split_type": "random",
+      "fold": 4,
+      "method": "learned_generated",
+      "n_rows": 10144,
+      "target_n": 10144,
+      "n_train_pos": 2534,
+      "n_train_neg_exp": 2438
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 0,
+      "method": "random_sequence",
+      "n_rows": 9432,
+      "target_n": 9432,
+      "n_train_pos": 2356,
+      "n_train_neg_exp": 2762
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 0,
+      "method": "composition_shuffle",
+      "n_rows": 9432,
+      "target_n": 9432,
+      "n_train_pos": 2356,
+      "n_train_neg_exp": 2762
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 0,
+      "method": "random_pairing",
+      "n_rows": 9432,
+      "target_n": 9432,
+      "n_train_pos": 2356,
+      "n_train_neg_exp": 2762
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 0,
+      "method": "structure_filtered",
+      "n_rows": 9432,
+      "target_n": 9432,
+      "n_train_pos": 2356,
+      "n_train_neg_exp": 2762
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 0,
+      "method": "hard_negative",
+      "n_rows": 9432,
+      "target_n": 9432,
+      "n_train_pos": 2356,
+      "n_train_neg_exp": 2762
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 0,
+      "method": "learned_generated",
+      "n_rows": 9432,
+      "target_n": 9432,
+      "n_train_pos": 2356,
+      "n_train_neg_exp": 2762
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 1,
+      "method": "random_sequence",
+      "n_rows": 9960,
+      "target_n": 9960,
+      "n_train_pos": 2488,
+      "n_train_neg_exp": 2640
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 1,
+      "method": "composition_shuffle",
+      "n_rows": 9960,
+      "target_n": 9960,
+      "n_train_pos": 2488,
+      "n_train_neg_exp": 2640
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 1,
+      "method": "random_pairing",
+      "n_rows": 9960,
+      "target_n": 9960,
+      "n_train_pos": 2488,
+      "n_train_neg_exp": 2640
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 1,
+      "method": "structure_filtered",
+      "n_rows": 9960,
+      "target_n": 9960,
+      "n_train_pos": 2488,
+      "n_train_neg_exp": 2640
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 1,
+      "method": "hard_negative",
+      "n_rows": 9960,
+      "target_n": 9960,
+      "n_train_pos": 2488,
+      "n_train_neg_exp": 2640
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 1,
+      "method": "learned_generated",
+      "n_rows": 9960,
+      "target_n": 9960,
+      "n_train_pos": 2488,
+      "n_train_neg_exp": 2640
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 2,
+      "method": "random_sequence",
+      "n_rows": 8944,
+      "target_n": 8944,
+      "n_train_pos": 2234,
+      "n_train_neg_exp": 2899
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 2,
+      "method": "composition_shuffle",
+      "n_rows": 8944,
+      "target_n": 8944,
+      "n_train_pos": 2234,
+      "n_train_neg_exp": 2899
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 2,
+      "method": "random_pairing",
+      "n_rows": 8944,
+      "target_n": 8944,
+      "n_train_pos": 2234,
+      "n_train_neg_exp": 2899
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 2,
+      "method": "structure_filtered",
+      "n_rows": 8944,
+      "target_n": 8944,
+      "n_train_pos": 2234,
+      "n_train_neg_exp": 2899
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 2,
+      "method": "hard_negative",
+      "n_rows": 8944,
+      "target_n": 8944,
+      "n_train_pos": 2234,
+      "n_train_neg_exp": 2899
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 2,
+      "method": "learned_generated",
+      "n_rows": 8944,
+      "target_n": 8944,
+      "n_train_pos": 2234,
+      "n_train_neg_exp": 2899
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 3,
+      "method": "random_sequence",
+      "n_rows": 11460,
+      "target_n": 11460,
+      "n_train_pos": 2863,
+      "n_train_neg_exp": 1819
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 3,
+      "method": "composition_shuffle",
+      "n_rows": 11460,
+      "target_n": 11460,
+      "n_train_pos": 2863,
+      "n_train_neg_exp": 1819
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 3,
+      "method": "random_pairing",
+      "n_rows": 11460,
+      "target_n": 11460,
+      "n_train_pos": 2863,
+      "n_train_neg_exp": 1819
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 3,
+      "method": "structure_filtered",
+      "n_rows": 11460,
+      "target_n": 11460,
+      "n_train_pos": 2863,
+      "n_train_neg_exp": 1819
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 3,
+      "method": "hard_negative",
+      "n_rows": 11460,
+      "target_n": 11460,
+      "n_train_pos": 2863,
+      "n_train_neg_exp": 1819
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 3,
+      "method": "learned_generated",
+      "n_rows": 11460,
+      "target_n": 11460,
+      "n_train_pos": 2863,
+      "n_train_neg_exp": 1819
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 4,
+      "method": "random_sequence",
+      "n_rows": 11124,
+      "target_n": 11124,
+      "n_train_pos": 2779,
+      "n_train_neg_exp": 2056
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 4,
+      "method": "composition_shuffle",
+      "n_rows": 11124,
+      "target_n": 11124,
+      "n_train_pos": 2779,
+      "n_train_neg_exp": 2056
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 4,
+      "method": "random_pairing",
+      "n_rows": 11124,
+      "target_n": 11124,
+      "n_train_pos": 2779,
+      "n_train_neg_exp": 2056
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 4,
+      "method": "structure_filtered",
+      "n_rows": 11124,
+      "target_n": 11124,
+      "n_train_pos": 2779,
+      "n_train_neg_exp": 2056
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 4,
+      "method": "hard_negative",
+      "n_rows": 11124,
+      "target_n": 11124,
+      "n_train_pos": 2779,
+      "n_train_neg_exp": 2056
+    },
+    {
+      "split_type": "aptamer",
+      "fold": 4,
+      "method": "learned_generated",
+      "n_rows": 11124,
+      "target_n": 11124,
+      "n_train_pos": 2779,
+      "n_train_neg_exp": 2056
+    },
+    {
+      "split_type": "molecule",
+      "fold": 0,
+      "method": "random_sequence",
+      "n_rows": 11444,
+      "target_n": 11444,
+      "n_train_pos": 2859,
+      "n_train_neg_exp": 2133
+    },
+    {
+      "split_type": "molecule",
+      "fold": 0,
+      "method": "composition_shuffle",
+      "n_rows": 11444,
+      "target_n": 11444,
+      "n_train_pos": 2859,
+      "n_train_neg_exp": 2133
+    },
+    {
+      "split_type": "molecule",
+      "fold": 0,
+      "method": "random_pairing",
+      "n_rows": 11444,
+      "target_n": 11444,
+      "n_train_pos": 2859,
+      "n_train_neg_exp": 2133
+    },
+    {
+      "split_type": "molecule",
+      "fold": 0,
+      "method": "structure_filtered",
+      "n_rows": 11444,
+      "target_n": 11444,
+      "n_train_pos": 2859,
+      "n_train_neg_exp": 2133
+    },
+    {
+      "split_type": "molecule",
+      "fold": 0,
+      "method": "hard_negative",
+      "n_rows": 11444,
+      "target_n": 11444,
+      "n_train_pos": 2859,
+      "n_train_neg_exp": 2133
+    },
+    {
+      "split_type": "molecule",
+      "fold": 0,
+      "method": "learned_generated",
+      "n_rows": 11444,
+      "target_n": 11444,
+      "n_train_pos": 2859,
+      "n_train_neg_exp": 2133
+    },
+    {
+      "split_type": "molecule",
+      "fold": 1,
+      "method": "random_sequence",
+      "n_rows": 10376,
+      "target_n": 10376,
+      "n_train_pos": 2592,
+      "n_train_neg_exp": 2449
+    },
+    {
+      "split_type": "molecule",
+      "fold": 1,
+      "method": "composition_shuffle",
+      "n_rows": 10376,
+      "target_n": 10376,
+      "n_train_pos": 2592,
+      "n_train_neg_exp": 2449
+    },
+    {
+      "split_type": "molecule",
+      "fold": 1,
+      "method": "random_pairing",
+      "n_rows": 10376,
+      "target_n": 10376,
+      "n_train_pos": 2592,
+      "n_train_neg_exp": 2449
+    },
+    {
+      "split_type": "molecule",
+      "fold": 1,
+      "method": "structure_filtered",
+      "n_rows": 10376,
+      "target_n": 10376,
+      "n_train_pos": 2592,
+      "n_train_neg_exp": 2449
+    },
+    {
+      "split_type": "molecule",
+      "fold": 1,
+      "method": "hard_negative",
+      "n_rows": 10376,
+      "target_n": 10376,
+      "n_train_pos": 2592,
+      "n_train_neg_exp": 2449
+    },
+    {
+      "split_type": "molecule",
+      "fold": 1,
+      "method": "learned_generated",
+      "n_rows": 10376,
+      "target_n": 10376,
+      "n_train_pos": 2592,
+      "n_train_neg_exp": 2449
+    },
+    {
+      "split_type": "molecule",
+      "fold": 2,
+      "method": "random_sequence",
+      "n_rows": 9996,
+      "target_n": 9996,
+      "n_train_pos": 2497,
+      "n_train_neg_exp": 2544
+    },
+    {
+      "split_type": "molecule",
+      "fold": 2,
+      "method": "composition_shuffle",
+      "n_rows": 9996,
+      "target_n": 9996,
+      "n_train_pos": 2497,
+      "n_train_neg_exp": 2544
+    },
+    {
+      "split_type": "molecule",
+      "fold": 2,
+      "method": "random_pairing",
+      "n_rows": 9996,
+      "target_n": 9996,
+      "n_train_pos": 2497,
+      "n_train_neg_exp": 2544
+    },
+    {
+      "split_type": "molecule",
+      "fold": 2,
+      "method": "structure_filtered",
+      "n_rows": 9996,
+      "target_n": 9996,
+      "n_train_pos": 2497,
+      "n_train_neg_exp": 2544
+    },
+    {
+      "split_type": "molecule",
+      "fold": 2,
+      "method": "hard_negative",
+      "n_rows": 9996,
+      "target_n": 9996,
+      "n_train_pos": 2497,
+      "n_train_neg_exp": 2544
+    },
+    {
+      "split_type": "molecule",
+      "fold": 2,
+      "method": "learned_generated",
+      "n_rows": 9996,
+      "target_n": 9996,
+      "n_train_pos": 2497,
+      "n_train_neg_exp": 2544
+    },
+    {
+      "split_type": "molecule",
+      "fold": 3,
+      "method": "random_sequence",
+      "n_rows": 10000,
+      "target_n": 10000,
+      "n_train_pos": 2498,
+      "n_train_neg_exp": 2543
+    },
+    {
+      "split_type": "molecule",
+      "fold": 3,
+      "method": "composition_shuffle",
+      "n_rows": 10000,
+      "target_n": 10000,
+      "n_train_pos": 2498,
+      "n_train_neg_exp": 2543
+    },
+    {
+      "split_type": "molecule",
+      "fold": 3,
+      "method": "random_pairing",
+      "n_rows": 10000,
+      "target_n": 10000,
+      "n_train_pos": 2498,
+      "n_train_neg_exp": 2543
+    },
+    {
+      "split_type": "molecule",
+      "fold": 3,
+      "method": "structure_filtered",
+      "n_rows": 10000,
+      "target_n": 10000,
+      "n_train_pos": 2498,
+      "n_train_neg_exp": 2543
+    },
+    {
+      "split_type": "molecule",
+      "fold": 3,
+      "method": "hard_negative",
+      "n_rows": 10000,
+      "target_n": 10000,
+      "n_train_pos": 2498,
+      "n_train_neg_exp": 2543
+    },
+    {
+      "split_type": "molecule",
+      "fold": 3,
+      "method": "learned_generated",
+      "n_rows": 10000,
+      "target_n": 10000,
+      "n_train_pos": 2498,
+      "n_train_neg_exp": 2543
+    },
+    {
+      "split_type": "molecule",
+      "fold": 4,
+      "method": "random_sequence",
+      "n_rows": 10064,
+      "target_n": 10064,
+      "n_train_pos": 2514,
+      "n_train_neg_exp": 2527
+    },
+    {
+      "split_type": "molecule",
+      "fold": 4,
+      "method": "composition_shuffle",
+      "n_rows": 10064,
+      "target_n": 10064,
+      "n_train_pos": 2514,
+      "n_train_neg_exp": 2527
+    },
+    {
+      "split_type": "molecule",
+      "fold": 4,
+      "method": "random_pairing",
+      "n_rows": 10064,
+      "target_n": 10064,
+      "n_train_pos": 2514,
+      "n_train_neg_exp": 2527
+    },
+    {
+      "split_type": "molecule",
+      "fold": 4,
+      "method": "structure_filtered",
+      "n_rows": 10064,
+      "target_n": 10064,
+      "n_train_pos": 2514,
+      "n_train_neg_exp": 2527
+    },
+    {
+      "split_type": "molecule",
+      "fold": 4,
+      "method": "hard_negative",
+      "n_rows": 10064,
+      "target_n": 10064,
+      "n_train_pos": 2514,
+      "n_train_neg_exp": 2527
+    },
+    {
+      "split_type": "molecule",
+      "fold": 4,
+      "method": "learned_generated",
+      "n_rows": 10064,
+      "target_n": 10064,
+      "n_train_pos": 2514,
+      "n_train_neg_exp": 2527
+    }
+  ]
+}

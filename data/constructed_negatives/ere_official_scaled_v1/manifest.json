@@ -1,0 +1,49 @@
+{
+  "run_id": "ere_official_scaled_v1",
+  "purpose": "Release tables of constructed negatives; does NOT retrain models",
+  "metrics_unchanged": "Keep existing results/*/ere_metrics.csv from original ERE runs. This export only materializes negative pairs.",
+  "seed": 42,
+  "rng_mode": "per_split",
+  "n_folds": 5,
+  "split_types": [
+    "aptamer",
+    "molecule"
+  ],
+  "methods": [
+    "random_sequence",
+    "composition_shuffle",
+    "random_pairing",
+    "structure_filtered",
+    "experimental",
+    "learned_generated",
+    "hard_negative"
+  ],
+  "scopes": [
+    "test",
+    "train"
+  ],
+  "lgbm_hard_score": true,
+  "generation": "results/generation_expanded/train_fold_generation_summary.csv",
+  "embeddings": "data/aptabench/embeddings/aptabench_with_embeddings_v3_clamp.parquet",
+  "data_stats": {
+    "path": "data/aptabench/embeddings/aptabench_with_embeddings_v3_clamp.parquet",
+    "official_table": "data/aptabench/dataset/AptaBench_dataset.csv",
+    "split_source": "aptabench_official_json",
+    "raw_rows": 6289,
+    "clean_rows": 6289,
+    "n_pos": 3240,
+    "n_neg": 3049,
+    "conflicting_rows_dropped": 0,
+    "n_molecules": 942,
+    "n_aptamers": 1605,
+    "rows_with_smiles_embeddings": 6224,
+    "embeddings_csv_rows": 6413
+  },
+  "n_rows": 213255,
+  "outputs": {
+    "negatives_parquet": "negatives.parquet",
+    "negatives_summary_csv": "negatives_summary.csv",
+    "by_fold_csv_tree": true
+  },
+  "fidelity_note": "per_split resets RNG to seed at each split, matching official_scaled_v1 resume after aptamer (molecule rebuilt with fresh seed=42). Hard negatives may still differ slightly across library versions."
+}
