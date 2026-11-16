@@ -20,5 +20,5 @@ checkpoints/
 .ipynb_checkpoints/
 Thumbs.db
 results/
-!reviewer_updates/results/
-!reviewer_updates/results/*.csv
+!analyses/results/
+!analyses/results/*.csv

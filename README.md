@@ -61,7 +61,7 @@ The main ERE run uses the released embeddings and generation input. Some optiona
 | Experimental/synthetic mixes | `scripts/05_run_mix_experiment.py` | Local `results/` |
 | Blend and volume controls | `scripts/06_run_blend_volume.py` | Local `results/` |
 
-The additional CSVs and their interpretation are in [reviewer_updates/](reviewer_updates/). Generated `results/` files are local; released supplementary CSVs are versioned under `reviewer_updates/results/`.
+Summary CSVs and interpretation are in [analyses/](analyses/). Generated `results/` files are local; released analysis CSVs are versioned under `analyses/results/`.
 
 ## Repository map
 
@@ -72,11 +72,11 @@ The additional CSVs and their interpretation are in [reviewer_updates/](reviewer
 | [src/](src/) | Constructors, data loading, ERE, and analysis code |
 | [contrastive/](contrastive/) | Contrastive model and GRU generation code |
 | [scripts/](scripts/) | Reproduction commands |
-| [reviewer_updates/](reviewer_updates/) | Repeated-subset and source sensitivity analyses |
+| [analyses/](analyses/) | Repeated-subset and source sensitivity analyses |
 
 ## Interpretation
 
-- Official aptamer- and molecule-disjoint folds do not hold out assay or database source. The added source analysis is a sensitivity check within official folds, not an assay-disjoint benchmark.
+- Official aptamer- and molecule-disjoint folds do not hold out assay or database source. The source analysis is a sensitivity check within official folds, not an assay-disjoint benchmark.
 - Ten independent 10% redraws per molecule-disjoint fold give mean ROC-AUC **0.826 ± 0.070** for 10%-only experimental negatives. Redraws share test folds; comparison with full-data training is descriptive.
 - LightGBM isolates negative construction in the main experiment. Synthetic-constructor rankings under molecule shift are architecture-dependent.
 

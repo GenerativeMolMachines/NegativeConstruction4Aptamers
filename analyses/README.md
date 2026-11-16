@@ -1,15 +1,15 @@
-# Analyses added after review
+# Analysis results
 
-These CSVs accompany the revised paper. The original AptaBench ERE protocol and pre-exported fold data remain in the repository root.
+These CSVs summarize repeated-subset experiments and source-held-out sensitivity analyses on AptaBench.
 
-To reproduce the added analyses from the repository root:
+To reproduce the analyses from the repository root:
 
 ```bash
 python scripts/04_run_amplification.py --n-repeats 10 --out results/amplification_repeats10_v1
 python scripts/run_provenance_official_folds.py --out results/provenance_official_folds_v1
 ```
 
-The provenance runner uses the released official folds; its additional split logic is in `src/provenance_splits.py`. The optional `scripts/run_provenance_source_disjoint.py` performs a global source holdout and should not be confused with the official-fold sensitivity analysis.
+The provenance runner uses the released official folds; its source filtering logic is in `src/provenance_splits.py`. The optional `scripts/run_provenance_source_disjoint.py` performs a global source holdout and should not be confused with the official-fold sensitivity analysis.
 
 ## Repeated 10% experimental-negative subsets
 
@@ -26,4 +26,4 @@ The 10% versus full experimental pool comparison is descriptive because the trai
 
 The scored train pool excludes the test slice's source and all aptamers and molecules occurring in that slice. Only experimental, random-sequence, and random-pairing negatives were evaluated in this analysis. This is a database-source sensitivity analysis within the official folds, not an assay-disjoint evaluation. Some source-fold combinations are skipped by the minimum class-size rule, so rows must not be interpreted as independent panels.
 
-These files are supplementary evidence for the revised claims; the original benchmark table uses the official ERE folds.
+The main benchmark table uses the official ERE folds; source-held-out results are a separate sensitivity analysis.
