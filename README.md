@@ -55,13 +55,13 @@ The main ERE run uses the released embeddings and generation input. Some optiona
 | Analysis | Entry point | Output |
 |---|---|---|
 | Main ERE on official folds | `scripts/02_run_benchmark.py` | `results/ere_official_scaled_v1/` |
-| Cross-negative comparison | `scripts/03_cross_negative_eval.py` | Local `results/` |
+| Cross-negative comparison | `scripts/03_cross_negative_eval.py` | `results/ere_official_scaled_v1/cross_negative_heatmap.csv` |
 | Repeated 10% experimental subsets | `scripts/04_run_amplification.py --n-repeats 10` | `results/amplification_repeats10_v1/` |
 | Source-held-out sensitivity | `scripts/run_provenance_official_folds.py` | `results/provenance_official_folds_v1/` |
-| Experimental/synthetic mixes | `scripts/05_run_mix_experiment.py` | Local `results/` |
-| Blend and volume controls | `scripts/06_run_blend_volume.py` | Local `results/` |
+| Experimental/synthetic mixes | `scripts/05_run_mix_experiment.py` | `results/ere_fraction_retrain_v1/mix_metrics.csv` and `mix_summary.csv` |
+| Blend and volume controls | `scripts/06_run_blend_volume.py` | `results/ere_blend_volume_v1/blend_volume_metrics.csv` and `blend_volume_summary.csv` |
 
-Summary CSVs and interpretation are in [analyses/](analyses/). Generated `results/` files are local; released analysis CSVs are versioned under `analyses/results/`.
+Summary CSVs and interpretation are in [analyses/](analyses/). The commands write the outputs listed above when run from the repository root. Released analysis CSVs are available under `analyses/results/`.
 
 ## Repository map
 
@@ -76,7 +76,7 @@ Summary CSVs and interpretation are in [analyses/](analyses/). Generated `result
 
 ## Interpretation
 
-- Official aptamer- and molecule-disjoint folds do not hold out assay or database source. The source analysis is a sensitivity check within official folds, not an assay-disjoint benchmark.
+- AptaBench aptamer- and molecule-disjoint folds can share assays and database sources across train and test. The source sensitivity analysis holds out a database source within each AptaBench fold.
 - Ten independent 10% redraws per molecule-disjoint fold give mean ROC-AUC **0.826 ± 0.070** for 10%-only experimental negatives. Redraws share test folds; comparison with full-data training is descriptive.
 - LightGBM isolates negative construction in the main experiment. Synthetic-constructor rankings under molecule shift are architecture-dependent.
 
