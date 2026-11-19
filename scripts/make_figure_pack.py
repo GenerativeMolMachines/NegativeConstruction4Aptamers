@@ -16,7 +16,7 @@ import seaborn as sns
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results" / "figures"
 INPUT = ROOT / "analyses" / "results"
-PREFIX = "archived_"
+PREFIX = ""
 
 APTABENCH6 = [
     "random_sequence",

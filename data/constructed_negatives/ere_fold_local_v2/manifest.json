@@ -1,0 +1,20 @@
+{
+  "protocol": "ere_fold_local_v2",
+  "seed": 42,
+  "folds_per_split": 5,
+  "split_types": [
+    "random",
+    "aptamer",
+    "molecule"
+  ],
+  "training_candidate_policy": "Random pairing and Hard negative use training positives",
+  "measured_pair_policy": "Exclude measured pairs for Random pairing and Hard negative",
+  "pool_csv_count": 210,
+  "audited_synthetic_train_sets": 90,
+  "metrics_sha256": {
+    "cross_negative_metrics.csv": "ad3ae6bdb97ba410807c1e2705022f5d12f9cc571971eef86eb64143dbfa5185",
+    "ere_metrics.csv": "3a9b868b750f83026f8db035af0b0cf55518f415f4cadb9ad3cd275fe7f6d6df",
+    "leakage_audit.csv": "85444cfe21cb92c5761779685dc3d19d33590798b407c5e2f1e57524fda43431",
+    "synthetic_inflation_metrics.csv": "4438d3006d3d044a46db67735d6a3c72e067a04a51cd76faf7a0fa4b68dfc4d0"
+  }
+}

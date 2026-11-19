@@ -17,7 +17,7 @@ How much does the way we construct **synthetic non-binders** change an aptamer�
 | AptaBench aptamer–ligand pairs | Five folds each: stratified, aptamer-disjoint, molecule-disjoint | Experimentally characterized binders and non-binders |
 | Six synthetic constructors | Experimental-reference evaluation (ERE) on fixed held-out pairs | Experimental training negatives |
 
-**Main finding:** matched synthetic tests can substantially overstate performance against experimental non-binders. The ranking of synthetic methods can change with the prediction architecture and test-source provenance.
+**Main finding:** matched synthetic tests can substantially overstate performance against experimental non-binders. In the revised LightGBM run, Random pairing has the highest experimental-test ROC-AUC among synthetic methods on all three splits. See the [fold metrics](analyses/results/ere_metrics.csv) and [leakage audit](analyses/results/leakage_audit.csv).
 
 ## How the benchmark works
 
@@ -57,21 +57,21 @@ The main ERE run uses the released embeddings and generation input. Some optiona
 |---|---|---|
 | Main ERE on AptaBench folds | `scripts/02_run_benchmark.py` | `results/ere_fold_local_v2/` |
 | Cross-negative comparison | `scripts/03_cross_negative_eval.py` | `results/ere_fold_local_v2/cross_negative_heatmap.csv` |
-| Repeated 10% experimental subsets | `scripts/04_run_amplification.py --n-repeats 10` | `results/amplification_repeats10_v1/` |
+| Repeated 10% experimental subsets | `scripts/04_run_amplification.py --n-repeats 10 --out results/amplification_fold_local_v2` | `results/amplification_fold_local_v2/` |
 | Source-held-out sensitivity | `scripts/run_provenance_aptabench_folds.py` | `results/provenance_aptabench_folds_v1/` |
 | Experimental/synthetic mixes | `scripts/05_run_mix_experiment.py` | `results/ere_fraction_retrain_v1/mix_metrics.csv` and `mix_summary.csv` |
 | Blend and volume controls | `scripts/06_run_blend_volume.py` | `results/ere_blend_volume_v1/blend_volume_metrics.csv` and `blend_volume_summary.csv` |
 
 Summary CSVs and interpretation are in [analyses/](analyses/). The commands write the outputs listed above when run from the repository root. Released analysis CSVs are available under `analyses/results/`.
 
-Run `python scripts/07_make_figures.py` to regenerate the historical plots from the included CSVs. Use `--ere-inputs results/ere_fold_local_v2` to plot a completed revised ERE run. The volume and mix plots use separate historical experiment inputs.
+Run `python scripts/07_make_figures.py` to regenerate the current ERE plots from the included CSVs. Use `--ere-inputs results/ere_fold_local_v2` to plot a new run. The volume and mix plots reproduce separate historical experiments.
 
 ## Repository map
 
 | Path | Contents |
 |---|---|
 | [data/aptabench/](data/aptabench/) | AptaBench table, split indices, embeddings, and generation input |
-| [data/constructed_negatives/](data/constructed_negatives/) | Released fold-specific negative pools |
+| [Revised fold pools](data/constructed_negatives/ere_fold_local_v2/by_fold/) | Negative sets used by the revised LightGBM run |
 | [src/](src/) | Constructors, data loading, ERE, and analysis code |
 | [contrastive/](contrastive/) | Contrastive model and GRU generation code |
 | [scripts/](scripts/) | Reproduction commands |
@@ -80,8 +80,8 @@ Run `python scripts/07_make_figures.py` to regenerate the historical plots from 
 ## Interpretation
 
 - AptaBench aptamer- and molecule-disjoint folds can share assays and database sources across train and test. The source sensitivity analysis holds out a database source within each AptaBench fold.
-- Ten independent 10% redraws per molecule-disjoint fold give mean ROC-AUC **0.826 ± 0.070** for 10%-only experimental negatives. Redraws share test folds; comparison with full-data training is descriptive.
-- LightGBM isolates negative construction in the main experiment. Synthetic-constructor rankings under molecule shift are architecture-dependent.
+- In the historical 10% control, ten independent redraws per molecule-disjoint fold give mean ROC-AUC **0.826 ± 0.070** for 10%-only experimental negatives. Redraws share test folds. The historical synthetic augmentation arms used the earlier pools.
+- The revised comparison holds the LightGBM classifier fixed. Other architectures require evaluation on the revised pools.
 
 ## License and data
 
