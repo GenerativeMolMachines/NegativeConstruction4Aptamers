@@ -221,6 +221,9 @@ def run_ere_lgbm(
                 ("test", test_neg_sets, split.test_pos, split.test_neg_exp),
             ):
                 for nd in neg_sets.values():
+                    pool_dir = out / "constructed" / split_type / f"fold{fold}" / scope
+                    pool_dir.mkdir(parents=True, exist_ok=True)
+                    nd.frame.to_csv(pool_dir / f"{nd.method}.csv", index=False)
                     d = diagnostics(nd.frame, pos_ref, neg_ref)
                     d.update(
                         {
@@ -443,6 +446,7 @@ def _build_neg_sets(
             target_n=target_n,
             generated_path=str(generated_path),
             score_fn=_score_fn_for_method(method, score_fn, hard_score_fn),
+            candidate_positives=positives,
         )
         print(f"    method={method}: got {len(out[method].frame)} pairs", flush=True)
     return out

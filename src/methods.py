@@ -281,6 +281,8 @@ def generate_hard_negatives(
     neg_ratio: int = 4,
     candidate_multiplier: int = 32,
     score_fn=None,
+    *,
+    candidate_frame: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Robinson-style: keep high-scoring (binder-like) non-interacting pairs.
 
@@ -289,9 +291,10 @@ def generate_hard_negatives(
     more binder-like = harder negative).
     """
     forbidden = known_pairs(full_df)
-    seqs = np.asarray([str(s) for s in full_df["sequence"].astype(str).unique()], dtype=object)
-    keep_cols = ["type"] + [c for c in ("length", "gc_content") if c in full_df.columns]
-    seq_meta = full_df.drop_duplicates("sequence").set_index("sequence")[keep_cols]
+    candidates_frame = full_df if candidate_frame is None else candidate_frame
+    seqs = np.asarray(candidates_frame["sequence"].astype(str).unique(), dtype=object)
+    keep_cols = [c for c in ("type", "length", "gc_content") if c in candidates_frame.columns]
+    seq_meta = candidates_frame.drop_duplicates("sequence").set_index("sequence")[keep_cols]
 
     rows = []
     n_cand = max(neg_ratio * candidate_multiplier, neg_ratio)
@@ -304,7 +307,9 @@ def generate_hard_negatives(
         sampled = rng.choice(seqs, size=take, replace=False)
         pool = [s for s in sampled if s != pos_seq and (s, mol) not in forbidden]
         if len(pool) < n_cand:
-            pool = [s for s in seqs if s != pos_seq and (s, mol) not in forbidden] or list(seqs)
+            pool = [s for s in seqs if s != pos_seq and (s, mol) not in forbidden]
+        if not pool:
+            continue
         take = min(n_cand, len(pool))
         chosen = rng.choice(np.asarray(pool, dtype=object), size=take, replace=False)
         candidates = []
@@ -331,7 +336,7 @@ def generate_hard_negatives(
                     "hard_negative",
                     sequence=seq,
                     canonical_smiles=mol,
-                    type=(meta["type"] if meta is not None else r.get("type", "DNA")),
+                    type=(meta.get("type", r.get("type", "DNA")) if meta is not None else r.get("type", "DNA")),
                     source_positive_idx=int(i),
                     pair_rank=k,
                     contrastive_sim=sim if np.isfinite(sim) else np.nan,

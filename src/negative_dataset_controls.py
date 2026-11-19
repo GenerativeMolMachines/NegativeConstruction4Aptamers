@@ -64,6 +64,7 @@ def build_controlled_negative_dataset(
     generated_path: str,
     shuffle_struct_diff: float = 0.5,
     score_fn: Callable | None = None,
+    candidate_positives: pd.DataFrame | None = None,
 ) -> NegativeDataset:
     """Build one negative set with size and ligand distribution controls."""
     if target_n <= 0:
@@ -82,9 +83,11 @@ def build_controlled_negative_dataset(
     elif method == "structure_filtered":
         raw = generate_structure_filtered(sources, rng, neg_ratio=1)
     elif method == "hard_negative":
-        raw = generate_hard_negatives(sources, full_df, rng, neg_ratio=1, score_fn=score_fn)
+        raw = generate_hard_negatives(sources, full_df, rng, neg_ratio=1, score_fn=score_fn,
+                                      candidate_frame=candidate_positives)
     elif method == "random_pairing":
-        raw = generate_ligand_matched_random_pairing(sources, full_df, rng)
+        raw = generate_ligand_matched_random_pairing(sources, full_df, rng,
+                                                   candidate_frame=candidate_positives)
     elif method in ("learned_generated", "edit_based", "gru_edit"):
         raw = generate_ligand_matched_learned(
             sources,
@@ -143,22 +146,25 @@ def generate_ligand_matched_random_pairing(
     sources: pd.DataFrame,
     full_df: pd.DataFrame,
     rng: np.random.Generator,
+    *,
+    candidate_frame: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Random-pairing baseline with ligand distribution fixed by sources."""
     forbidden = known_pairs(full_df)
-    seqs = full_df["sequence"].astype(str).unique()
+    candidates = full_df if candidate_frame is None else candidate_frame
+    seqs = candidates["sequence"].astype(str).unique()
     meta = (
-        full_df.drop_duplicates("sequence")
-        .set_index("sequence")[[c for c in ("type", "length") if c in full_df.columns]]
+        candidates.drop_duplicates("sequence")
+        .set_index("sequence")[[c for c in ("type", "length") if c in candidates.columns]]
     )
     rows: list[dict] = []
     for i, r in sources.reset_index(drop=True).iterrows():
         mol = str(r["canonical_smiles"])
         pos_seq = str(r["sequence"])
-        for _ in range(100):
-            seq = str(rng.choice(seqs))
-            if seq != pos_seq and (seq, mol) not in forbidden:
-                break
+        legal = [seq for seq in seqs if seq != pos_seq and (seq, mol) not in forbidden]
+        if not legal:
+            continue
+        seq = str(rng.choice(legal))
         m = meta.loc[seq] if seq in meta.index else {}
         rows.append(
             {

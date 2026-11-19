@@ -17,11 +17,11 @@ def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument(
         "--cross-csv",
-        default=str(ROOT / "results" / "ere_aptabench_scaled_v1" / "cross_negative_metrics.csv"),
+        default=str(ROOT / "results" / "ere_fold_local_v2" / "cross_negative_metrics.csv"),
     )
     p.add_argument(
         "--out",
-        default=str(ROOT / "results" / "ere_aptabench_scaled_v1" / "cross_negative_heatmap.csv"),
+        default=str(ROOT / "results" / "ere_fold_local_v2" / "cross_negative_heatmap.csv"),
     )
     args = p.parse_args()
     pivot = cross_negative_pivot(args.cross_csv)

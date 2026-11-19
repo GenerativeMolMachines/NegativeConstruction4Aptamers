@@ -9,7 +9,6 @@ description = "Benchmark for synthetic negative construction under experimental-
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
-authors = [{ name = "Anonymous Authors" }]
 dependencies = [
   "pandas>=2.0",
   "numpy>=1.24",

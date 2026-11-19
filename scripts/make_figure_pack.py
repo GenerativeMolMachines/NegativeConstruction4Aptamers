@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import shutil
 from pathlib import Path
 
@@ -14,7 +15,8 @@ import seaborn as sns
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results" / "figures"
-OUT.mkdir(parents=True, exist_ok=True)
+INPUT = ROOT / "analyses" / "results"
+PREFIX = "archived_"
 
 APTABENCH6 = [
     "random_sequence",
@@ -30,7 +32,7 @@ LABELS = {
     "random_pairing": "Random pairing",
     "structure_filtered": "Struct-filtered",
     "hard_negative": "Hard negative",
-    "learned_generated": "Learned gen.",
+    "learned_generated": "Profile-GRU",
     "experimental": "Experimental",
 }
 METHOD_ORDER = APTABENCH6 + ["experimental"]
@@ -51,38 +53,11 @@ COLORS = {
 }
 
 
-def _aptabench_merged_crossneg_df() -> pd.DataFrame:
-    scaled = ROOT / "results" / "ere_aptabench_scaled_v1" / "cross_negative_metrics.csv"
-    v1 = ROOT / "results" / "ere_aptabench_v1" / "cross_negative_metrics.csv"
-    if not scaled.exists() or not v1.exists():
-        raise FileNotFoundError("Need aptabench_scaled_v1 and aptabench_v1 cross_negative_metrics.csv")
-    dfs = []
-    v1df = pd.read_csv(v1)
-    if "skipped" in v1df.columns:
-        v1df = v1df[~v1df["skipped"].fillna(False).astype(bool)]
-    dfs.append(v1df[v1df["split_type"] == "random"])
-    sdf = pd.read_csv(scaled)
-    if "skipped" in sdf.columns:
-        sdf = sdf[~sdf["skipped"].fillna(False).astype(bool)]
-    dfs.append(sdf[sdf["split_type"].isin(["aptamer", "molecule"])])
-    return pd.concat(dfs, ignore_index=True)
-
-
-def _aptabench_merged_ere_df() -> pd.DataFrame:
-    scaled = ROOT / "results" / "ere_aptabench_scaled_v1" / "ere_metrics.csv"
-    v1 = ROOT / "results" / "ere_aptabench_v1" / "ere_metrics.csv"
-    if not scaled.exists() or not v1.exists():
-        raise FileNotFoundError("Need aptabench_scaled_v1 and aptabench_v1 ere_metrics.csv")
-    dfs = []
-    v1df = pd.read_csv(v1)
-    if "skipped" in v1df.columns:
-        v1df = v1df[~v1df["skipped"].fillna(False).astype(bool)]
-    dfs.append(v1df[v1df["split_type"] == "random"])
-    sdf = pd.read_csv(scaled)
-    if "skipped" in sdf.columns:
-        sdf = sdf[~sdf["skipped"].fillna(False).astype(bool)]
-    dfs.append(sdf[sdf["split_type"].isin(["aptamer", "molecule"])])
-    return pd.concat(dfs, ignore_index=True)
+def _figure_input(name: str) -> pd.DataFrame:
+    frame = pd.read_csv(INPUT / f"{PREFIX}{name}")
+    if "skipped" in frame:
+        frame = frame[~frame["skipped"].fillna(False).astype(bool)]
+    return frame
 
 
 def _style() -> None:
@@ -138,8 +113,8 @@ def fig0_pipeline_schematic() -> None:
 
 
 def fig_ere_bars() -> None:
-    df = _aptabench_merged_ere_df()
-    src_label = "aptabench_scaled_v1 + aptabench_v1 (stratified)"
+    df = _figure_input("ere_metrics.csv")
+    src_label = "Archived AptaBench ERE" if PREFIX else "AptaBench ERE"
     auc_col = "test_roc_auc_experimental" if "test_roc_auc_experimental" in df.columns else "test_roc_auc"
     g = (
         df[df["train_negative"].isin(METHOD_ORDER)]
@@ -172,8 +147,8 @@ def fig_ere_bars() -> None:
 
 
 def fig_crossneg_heatmaps() -> None:
-    df = _aptabench_merged_crossneg_df()
-    src_label = "aptabench_scaled_v1 + aptabench_v1 (stratified)"
+    df = _figure_input("cross_negative_metrics.csv")
+    src_label = "Archived AptaBench ERE" if PREFIX else "AptaBench ERE"
     train_col = "train_negative" if "train_negative" in df.columns else "train_method"
     test_col = "test_negative" if "test_negative" in df.columns else "test_method"
     value = next(c for c in ("test_roc_auc", "roc_auc", "test_auc") if c in df.columns)
@@ -205,10 +180,7 @@ def fig_crossneg_heatmaps() -> None:
 
 
 def fig_mix_curves() -> None:
-    src = ROOT / "results" / "ere_fraction_retrain_v1" / "mix_summary.csv"
-    if not src.exists():
-        return
-    df = pd.read_csv(src)
+    df = pd.read_csv(ROOT / "analyses" / "results" / "archived_mix_summary.csv")
     methods = [m for m in APTABENCH6 if m in set(df["train_negative"])]
     fig, axes = plt.subplots(1, 3, figsize=(12.8, 3.9), sharey=True)
     for ax, split in zip(axes, SPLIT_ORDER):
@@ -275,13 +247,55 @@ def fig_methods_overview() -> None:
     _save(fig, "fig_methods_overview")
 
 
+def fig_negative_volume() -> None:
+    summary = pd.read_csv(ROOT / "analyses" / "results" / "archived_blend_volume_summary.csv")
+    volume = summary.loc[summary.arm.eq("volume")]
+    historical_ere = pd.read_csv(ROOT / "analyses" / "results" / "archived_ere_metrics.csv")
+    reference = historical_ere.loc[historical_ere.train_negative.eq("experimental")]
+    ref_means = reference.groupby("split_type").test_roc_auc.mean()
+    fig, axes = plt.subplots(1, 3, figsize=(12, 4.8), sharey=True)
+    for ax, split in zip(axes, SPLIT_ORDER):
+        for method in APTABENCH6:
+            rows = volume.loc[volume.split_type.eq(split) & volume.train_negative.eq(method)]
+            rows = rows.sort_values("syn_to_pos_ratio")
+            ax.errorbar(rows.syn_to_pos_ratio, rows.auc_mean, yerr=rows.auc_std, marker="o",
+                        color=COLORS[method], label=LABELS[method], capsize=2)
+        ax.set_title(SPLIT_TITLE[split])
+        ax.axhline(ref_means.loc[split], ls="--", color="0.35", label="Experimental reference")
+        ax.set_xscale("log", base=2)
+        ax.set_xticks([0.25, 0.5, 1, 2, 4], labels=["0.25", "0.5", "1", "2", "4"])
+        ax.grid(axis="y", alpha=0.2)
+    axes[0].set_ylabel("Experimental-test ROC-AUC")
+    fig.supxlabel("Synthetic negatives / training positives", y=0.19)
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.005),
+               ncol=3, frameon=False)
+    fig.subplots_adjust(left=0.08, right=0.995, top=0.89, bottom=0.28, wspace=0.24)
+    _save(fig, "negative_volume")
+
+
 def main() -> None:
+    global INPUT, PREFIX, OUT
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--ere-inputs", type=Path, help="Directory containing a complete new ERE run")
+    parser.add_argument("--out", type=Path, default=OUT)
+    args = parser.parse_args()
+    if args.ere_inputs:
+        INPUT, PREFIX = args.ere_inputs, ""
+        metrics = _figure_input("ere_metrics.csv")
+        metrics = metrics.loc[metrics.train_negative.isin(METHOD_ORDER)]
+        counts = metrics.groupby(["split_type", "train_negative"]).fold.nunique()
+        if len(counts) != 21 or not counts.eq(5).all():
+            raise SystemExit("The revised figure input requires five complete folds per method and split.")
+    OUT = args.out
+    OUT.mkdir(parents=True, exist_ok=True)
     _style()
     fig0_pipeline_schematic()
     fig_methods_overview()
     fig_ere_bars()
     fig_crossneg_heatmaps()
     fig_mix_curves()
+    fig_negative_volume()
     print("Wrote figures to", OUT)
     for p in sorted(OUT.glob("*")):
         print(" ", p.name)

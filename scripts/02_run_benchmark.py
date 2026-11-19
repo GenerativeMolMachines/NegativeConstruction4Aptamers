@@ -15,7 +15,11 @@ from ere_lgbm import SPLIT_TYPES, run_ere_lgbm
 
 DEFAULT_DATA = ROOT / "data" / "aptabench" / "embeddings" / "aptabench_with_embeddings_v3_clamp.parquet"
 DEFAULT_GENERATION = ROOT / "data" / "aptabench" / "generation" / "train_fold_generation_summary.csv"
-DEFAULT_OUT = ROOT / "results" / "ere_aptabench_scaled_v1"
+DEFAULT_OUT = ROOT / "results" / "ere_fold_local_v2"
+PAPER_METHODS = (
+    "random_sequence", "composition_shuffle", "random_pairing",
+    "structure_filtered", "hard_negative", "learned_generated", "experimental",
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -25,7 +29,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--out", default=str(DEFAULT_OUT))
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--n-folds", type=int, default=5)
-    p.add_argument("--methods", default="all")
+    p.add_argument("--methods", default="paper")
     p.add_argument("--split-types", default="all")
     p.add_argument("--lgbm-hard-score", action="store_true")
     return p.parse_args()
@@ -34,7 +38,9 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     methods = (
-        list(NEGATIVE_METHODS)
+        list(PAPER_METHODS)
+        if args.methods == "paper"
+        else list(NEGATIVE_METHODS)
         if args.methods == "all"
         else [m.strip() for m in args.methods.split(",") if m.strip()]
     )

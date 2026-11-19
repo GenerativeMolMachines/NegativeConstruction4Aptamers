@@ -45,7 +45,8 @@ cd Neurips_AIDAR
 python -m venv .venv
 # Activate .venv for your shell, then:
 pip install -r requirements.txt
-python scripts/02_run_benchmark.py --out results/ere_aptabench_scaled_v1 --lgbm-hard-score
+python scripts/02_run_benchmark.py --lgbm-hard-score
+python scripts/audit_ere_pairs.py results/ere_fold_local_v2/constructed --out results/ere_fold_local_v2/leakage_audit.csv
 ```
 
 The main ERE run uses the released embeddings and generation input. Some optional generation and structure-filtering experiments need pretrained models, a GPU, or ViennaRNA; see [contrastive/README.md](contrastive/README.md).
@@ -54,14 +55,16 @@ The main ERE run uses the released embeddings and generation input. Some optiona
 
 | Analysis | Entry point | Output |
 |---|---|---|
-| Main ERE on AptaBench folds | `scripts/02_run_benchmark.py` | `results/ere_aptabench_scaled_v1/` |
-| Cross-negative comparison | `scripts/03_cross_negative_eval.py` | `results/ere_aptabench_scaled_v1/cross_negative_heatmap.csv` |
+| Main ERE on AptaBench folds | `scripts/02_run_benchmark.py` | `results/ere_fold_local_v2/` |
+| Cross-negative comparison | `scripts/03_cross_negative_eval.py` | `results/ere_fold_local_v2/cross_negative_heatmap.csv` |
 | Repeated 10% experimental subsets | `scripts/04_run_amplification.py --n-repeats 10` | `results/amplification_repeats10_v1/` |
 | Source-held-out sensitivity | `scripts/run_provenance_aptabench_folds.py` | `results/provenance_aptabench_folds_v1/` |
 | Experimental/synthetic mixes | `scripts/05_run_mix_experiment.py` | `results/ere_fraction_retrain_v1/mix_metrics.csv` and `mix_summary.csv` |
 | Blend and volume controls | `scripts/06_run_blend_volume.py` | `results/ere_blend_volume_v1/blend_volume_metrics.csv` and `blend_volume_summary.csv` |
 
 Summary CSVs and interpretation are in [analyses/](analyses/). The commands write the outputs listed above when run from the repository root. Released analysis CSVs are available under `analyses/results/`.
+
+Run `python scripts/07_make_figures.py` to regenerate the historical plots from the included CSVs. Use `--ere-inputs results/ere_fold_local_v2` to plot a completed revised ERE run. The volume and mix plots use separate historical experiment inputs.
 
 ## Repository map
 
@@ -82,4 +85,4 @@ Summary CSVs and interpretation are in [analyses/](analyses/). The commands writ
 
 ## License and data
 
-Code in this release is under [MIT](LICENSE). AptaBench is the upstream benchmark; consult its [repository](https://github.com/GenerativeMolMachines/AptaBench) for dataset terms and citation.
+Code in this release is under [MIT](LICENSE). The [AptaBench dataset](https://huggingface.co/datasets/GenerativeMolMachines/AptaBench_dataset) by Mariia Eremeyeva and Nikita Serov is released under CC BY 4.0. The release contains 1,610 published aptamer sequences. Normalizing U to T yields 1,605. The released ligand embedding join covers 6,224 of 6,289 rows. See the [AptaBench repository](https://github.com/GenerativeMolMachines/AptaBench) for the citation.

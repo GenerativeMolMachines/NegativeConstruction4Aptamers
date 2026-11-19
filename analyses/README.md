@@ -26,4 +26,10 @@ The 10% versus full experimental pool comparison is descriptive because the trai
 
 The scored train pool excludes the test slice's source and all aptamers and molecules occurring in that slice. Only experimental, random-sequence, and random-pairing negatives were evaluated in this analysis. This is a database-source sensitivity analysis within the AptaBench folds, not an assay-disjoint evaluation. Some source-fold combinations are skipped by the minimum class-size rule, so rows must not be interpreted as independent panels.
 
-The main benchmark table uses the main ERE folds; source-held-out results are a separate sensitivity analysis.
+The main benchmark table uses the AptaBench folds. The source sensitivity experiment additionally removes all shared aptamers and molecules.
+
+## Main ERE protocol revision
+
+The archived inputs reproduce the historical figures. The previous Random pairing and Hard negative implementation used the complete sequence table as its candidate pool. An audit of the released pools found test-exclusive sequences in both methods. The revised runner passes the positive sequences of each training fold as the candidate pool. The complete measured pair table serves as the exclusion set. Results that reused the older pools have the same provenance limitation.
+
+The published Profile-GRU candidate CSV contains no split or fold identifiers. The pair audit checks the emitted pairs. Generator training provenance requires separate fold-level records. The architecture comparison requires the original fold-level outputs or a new matched rerun.
