@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ERE LightGBM on official AptaBench folds (StandardScaler, fixed LGBM)."""
+"""ERE LightGBM on AptaBench folds (StandardScaler, fixed LGBM)."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ from ere_lgbm import SPLIT_TYPES, run_ere_lgbm
 
 DEFAULT_DATA = ROOT / "data" / "aptabench" / "embeddings" / "aptabench_with_embeddings_v3_clamp.parquet"
 DEFAULT_GENERATION = ROOT / "data" / "aptabench" / "generation" / "train_fold_generation_summary.csv"
-DEFAULT_OUT = ROOT / "results" / "ere_official_scaled_v1"
+DEFAULT_OUT = ROOT / "results" / "ere_aptabench_scaled_v1"
 
 
 def parse_args() -> argparse.Namespace:

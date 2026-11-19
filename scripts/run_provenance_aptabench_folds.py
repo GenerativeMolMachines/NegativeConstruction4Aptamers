@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Source holdout inside the official AptaBench folds, with a hard leak fence.
+"""Source holdout inside the AptaBench folds, with a hard leak fence.
 
 The global leave-one-source-out split is not this experiment. Here the test
-pairs are the official held-out fold, restricted to one database source.
-Training rows are the official training fold without that source and without
+pairs are the AptaBench test fold, restricted to one database source.
+Training rows are the AptaBench training fold without that source and without
 any aptamer or molecule that appears in that test slice. Synthetic negatives
 are built only from that filtered train pool and are dropped if they recreate
 a held-out entity, a test pair, or a known binder. A cell with any remaining
@@ -23,12 +23,12 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from data import known_pairs, load_official_indexed_pairs, normalize_sequence  # noqa: E402
+from data import known_pairs, load_aptabench_indexed_pairs, normalize_sequence  # noqa: E402
 from ere_lgbm import _eval_model, _fit_model, _labeled_eval, make_folds  # noqa: E402
 from negative_dataset_controls import build_controlled_negative_dataset  # noqa: E402
-from provenance_splits import official_fold_source_holdouts  # noqa: E402
+from provenance_splits import aptabench_fold_source_holdouts  # noqa: E402
 
-DEFAULT_OUT = ROOT / "results" / "provenance_official_folds_v1"
+DEFAULT_OUT = ROOT / "results" / "provenance_aptabench_folds_v1"
 METHODS = ("experimental", "random_sequence", "random_pairing")
 SPLIT_TYPES = ("stratified", "aptamer", "molecule")
 
@@ -129,7 +129,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
-    df, _ = load_official_indexed_pairs()
+    df, _ = load_aptabench_indexed_pairs()
     known_pos = known_pairs(df, {1})
     known_pos = {(normalize_sequence(s), m.strip()) for s, m in known_pos}
     split_types = [s.strip() for s in args.splits.split(",") if s.strip()]
@@ -142,7 +142,7 @@ def main() -> int:
     audit_rows = []
     for split_type in split_types:
         folds = make_folds(df, split_type, 5, args.seed)
-        cells = official_fold_source_holdouts(folds, split_type=split_type)
+        cells = aptabench_fold_source_holdouts(folds, split_type=split_type)
         for cell in cells:
             audit_rows.append({k: v for k, v in cell.items() if not isinstance(v, pd.DataFrame)})
         if args.audit_only:
@@ -239,7 +239,7 @@ def main() -> int:
 
     pd.DataFrame(audit_rows).to_csv(args.out / "fold_source_audit.csv", index=False)
     meta = {
-        "protocol": "official_fold_source_holdout_v1",
+        "protocol": "aptabench_fold_source_holdout_v1",
         "splits": split_types,
         "methods": list(METHODS),
         "entity_overlap_allowed": False,

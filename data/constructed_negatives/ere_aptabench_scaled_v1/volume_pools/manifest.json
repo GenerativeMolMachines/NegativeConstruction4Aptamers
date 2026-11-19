@@ -1,5 +1,5 @@
 {
-  "derived_from": "data/constructed_negatives/ere_official_scaled_v1/by_fold",
+  "derived_from": "data/constructed_negatives/ere_aptabench_scaled_v1/by_fold",
   "purpose": "Volume-arm synthetic pools (n_syn = r * |train_pos|); bootstrap-expanded from train CSV",
   "created_utc": "2026-08-28T00:37:08.401104+00:00",
   "seed": 42,
@@ -26,8 +26,8 @@
   "n_folds": 5,
   "data_stats": {
     "path": "data/aptabench/embeddings/aptabench_with_embeddings_v3_clamp.parquet",
-    "official_table": "data/aptabench/dataset/AptaBench_dataset.csv",
-    "split_source": "aptabench_official_json",
+    "aptabench_table": "data/aptabench/dataset/AptaBench_dataset.csv",
+    "split_source": "aptabench_json",
     "raw_rows": 6289,
     "clean_rows": 6289,
     "n_pos": 3240,

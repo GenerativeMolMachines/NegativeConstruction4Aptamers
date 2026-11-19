@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 from constructed_negatives_loader import load_constructed_negative_frame
-from data import load_official_indexed_pairs
+from data import load_aptabench_indexed_pairs
 from ere_lgbm import _eval_model, _fit_model, _labeled_eval, make_folds
 
 AMPLIFICATION_PROTOCOL = "amplification_exp_v1"
@@ -208,7 +208,7 @@ def run_amplification_experiment(
     if not root.is_dir():
         raise FileNotFoundError(f"constructed_negatives_root not found: {root}")
 
-    df, _ = load_official_indexed_pairs(data_path)
+    df, _ = load_aptabench_indexed_pairs(data_path)
     folds = make_folds(df, split_type, n_folds, seed)
 
     metric_rows, done = _load_checkpoint(out) if resume else ([], set())

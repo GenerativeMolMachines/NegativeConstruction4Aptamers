@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fraction-retrain mix experiment (official folds, StandardScaler)."""
+"""Fraction-retrain mix experiment (AptaBench folds, StandardScaler)."""
 
 from __future__ import annotations
 

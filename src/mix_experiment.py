@@ -32,7 +32,7 @@ import numpy as np
 import pandas as pd
 
 from aptabench_features import feature_spec_for_split
-from data import DEFAULT_DATA, load_official_indexed_pairs, normalize_sequence
+from data import DEFAULT_DATA, load_aptabench_indexed_pairs, normalize_sequence
 from fold_local_learned import (
     FRACTION_LOCAL_LEARNED_METHODS,
     build_fraction_local_bundle,
@@ -163,7 +163,7 @@ def run_mix_experiment(
     split_types = split_types or list(SPLIT_TYPES)
     mix_fractions = tuple(mix_fractions or DEFAULT_MIX_FRACTIONS)
     rng = np.random.default_rng(seed)
-    df, data_stats = load_official_indexed_pairs(data_path)
+    df, data_stats = load_aptabench_indexed_pairs(data_path)
     raw_df = pd.read_csv(data_path, low_memory=False)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)

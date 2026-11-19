@@ -17,7 +17,7 @@ from amplification_experiment import (
 )
 
 DEFAULT_DATA = ROOT / "data" / "aptabench" / "embeddings" / "aptabench_with_embeddings_v3_clamp.parquet"
-DEFAULT_CONSTRUCTED = ROOT / "data" / "constructed_negatives" / "ere_official_scaled_v1"
+DEFAULT_CONSTRUCTED = ROOT / "data" / "constructed_negatives" / "ere_aptabench_scaled_v1"
 DEFAULT_OUT = ROOT / "results" / "amplification_v1"
 
 

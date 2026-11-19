@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Blend + volume sweep on official AptaBench folds."""
+"""Blend + volume sweep on AptaBench folds."""
 
 from __future__ import annotations
 

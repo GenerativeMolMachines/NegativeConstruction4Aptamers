@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results" / "figures"
 OUT.mkdir(parents=True, exist_ok=True)
 
-OFFICIAL6 = [
+APTABENCH6 = [
     "random_sequence",
     "composition_shuffle",
     "random_pairing",
@@ -33,7 +33,7 @@ LABELS = {
     "learned_generated": "Learned gen.",
     "experimental": "Experimental",
 }
-METHOD_ORDER = OFFICIAL6 + ["experimental"]
+METHOD_ORDER = APTABENCH6 + ["experimental"]
 SPLIT_ORDER = ["random", "aptamer", "molecule"]
 SPLIT_TITLE = {
     "random": "Stratified",
@@ -51,11 +51,11 @@ COLORS = {
 }
 
 
-def _official_merged_crossneg_df() -> pd.DataFrame:
-    scaled = ROOT / "results" / "ere_official_scaled_v1" / "cross_negative_metrics.csv"
-    v1 = ROOT / "results" / "ere_official_v1" / "cross_negative_metrics.csv"
+def _aptabench_merged_crossneg_df() -> pd.DataFrame:
+    scaled = ROOT / "results" / "ere_aptabench_scaled_v1" / "cross_negative_metrics.csv"
+    v1 = ROOT / "results" / "ere_aptabench_v1" / "cross_negative_metrics.csv"
     if not scaled.exists() or not v1.exists():
-        raise FileNotFoundError("Need official_scaled_v1 and official_v1 cross_negative_metrics.csv")
+        raise FileNotFoundError("Need aptabench_scaled_v1 and aptabench_v1 cross_negative_metrics.csv")
     dfs = []
     v1df = pd.read_csv(v1)
     if "skipped" in v1df.columns:
@@ -68,11 +68,11 @@ def _official_merged_crossneg_df() -> pd.DataFrame:
     return pd.concat(dfs, ignore_index=True)
 
 
-def _official_merged_ere_df() -> pd.DataFrame:
-    scaled = ROOT / "results" / "ere_official_scaled_v1" / "ere_metrics.csv"
-    v1 = ROOT / "results" / "ere_official_v1" / "ere_metrics.csv"
+def _aptabench_merged_ere_df() -> pd.DataFrame:
+    scaled = ROOT / "results" / "ere_aptabench_scaled_v1" / "ere_metrics.csv"
+    v1 = ROOT / "results" / "ere_aptabench_v1" / "ere_metrics.csv"
     if not scaled.exists() or not v1.exists():
-        raise FileNotFoundError("Need official_scaled_v1 and official_v1 ere_metrics.csv")
+        raise FileNotFoundError("Need aptabench_scaled_v1 and aptabench_v1 ere_metrics.csv")
     dfs = []
     v1df = pd.read_csv(v1)
     if "skipped" in v1df.columns:
@@ -138,8 +138,8 @@ def fig0_pipeline_schematic() -> None:
 
 
 def fig_ere_bars() -> None:
-    df = _official_merged_ere_df()
-    src_label = "official_scaled_v1 + official_v1 (stratified)"
+    df = _aptabench_merged_ere_df()
+    src_label = "aptabench_scaled_v1 + aptabench_v1 (stratified)"
     auc_col = "test_roc_auc_experimental" if "test_roc_auc_experimental" in df.columns else "test_roc_auc"
     g = (
         df[df["train_negative"].isin(METHOD_ORDER)]
@@ -172,8 +172,8 @@ def fig_ere_bars() -> None:
 
 
 def fig_crossneg_heatmaps() -> None:
-    df = _official_merged_crossneg_df()
-    src_label = "official_scaled_v1 + official_v1 (stratified)"
+    df = _aptabench_merged_crossneg_df()
+    src_label = "aptabench_scaled_v1 + aptabench_v1 (stratified)"
     train_col = "train_negative" if "train_negative" in df.columns else "train_method"
     test_col = "test_negative" if "test_negative" in df.columns else "test_method"
     value = next(c for c in ("test_roc_auc", "roc_auc", "test_auc") if c in df.columns)
@@ -209,7 +209,7 @@ def fig_mix_curves() -> None:
     if not src.exists():
         return
     df = pd.read_csv(src)
-    methods = [m for m in OFFICIAL6 if m in set(df["train_negative"])]
+    methods = [m for m in APTABENCH6 if m in set(df["train_negative"])]
     fig, axes = plt.subplots(1, 3, figsize=(12.8, 3.9), sharey=True)
     for ax, split in zip(axes, SPLIT_ORDER):
         sub = df[df["split_type"] == split]
@@ -239,7 +239,7 @@ def fig_mix_curves() -> None:
     axes[0].set_ylabel("Test ROC-AUC")
     if methods:
         axes[-1].legend(fontsize=7, loc="lower right", frameon=True, ncol=1)
-    fig.suptitle("Mix experiment (fraction-retrain v2, official scaled)", y=1.03)
+    fig.suptitle("Mix experiment (fraction-retrain v2, scaled features)", y=1.03)
     _save(fig, "fig3_mix_curves")
 
 
@@ -270,7 +270,7 @@ def fig_methods_overview() -> None:
         )
         ax.text(1.5, y + 0.275, LABELS[method], ha="center", va="center", fontsize=8, fontweight="bold")
         ax.text(3.0, y + 0.275, desc, ha="left", va="center", fontsize=9)
-    ax.text(0.3, 4.85, "Official-6 synthetic methods", fontsize=11, fontweight="bold")
+    ax.text(0.3, 4.85, "Six synthetic methods", fontsize=11, fontweight="bold")
     ax.text(0.3, 0.05, "Reference: experimental AptaBench label=0", fontsize=9, style="italic")
     _save(fig, "fig_methods_overview")
 

@@ -26,7 +26,7 @@ import numpy as np
 import pandas as pd
 
 from aptabench_features import feature_spec_for_split
-from data import DEFAULT_DATA, load_official_indexed_pairs
+from data import DEFAULT_DATA, load_aptabench_indexed_pairs
 from lgbm_scoring import HARD_SCORE_METHODS, build_bootstrap_lgbm_scorer
 from negative_dataset_controls import (
     NEGATIVE_METHODS,
@@ -126,7 +126,7 @@ def run_blend_volume_experiment(
     blend_fractions = tuple(blend_fractions or DEFAULT_BLEND_FRACTIONS)
     volume_ratios = tuple(volume_ratios or DEFAULT_VOLUME_RATIOS)
     rng = np.random.default_rng(seed)
-    df, data_stats = load_official_indexed_pairs(data_path)
+    df, data_stats = load_aptabench_indexed_pairs(data_path)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
 
@@ -143,10 +143,10 @@ def run_blend_volume_experiment(
         "n_folds": n_folds,
         "seed": seed,
         "lgbm_hard_score": lgbm_hard_score,
-        "split_source": "aptabench_official_json",
+        "split_source": "aptabench_json",
         "data_stats": data_stats,
         "note": (
-            "Official AptaBench JSON folds (val_idx=test). "
+            "AptaBench JSON folds (val_idx=test). "
             "blend: fixed N=|train_neg_exp|; volume: pure syn, n=r*|train_pos|; "
             "train/test only; learned pool=generation CSV; hard scorer=full train exp"
         ),

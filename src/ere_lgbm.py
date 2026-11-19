@@ -23,9 +23,9 @@ from sklearn.preprocessing import StandardScaler
 from aptabench_features import build_pair_features, feature_spec_for_split
 from data import (
     DEFAULT_DATA,
-    OFFICIAL_SPLIT_FILES,
-    OFFICIAL_SPLITS_DIR,
-    load_official_indexed_pairs,
+    APTABENCH_SPLIT_FILES,
+    APTABENCH_SPLITS_DIR,
+    load_aptabench_indexed_pairs,
     normalize_sequence,
 )
 from distribution_closeness import distribution_closeness
@@ -40,7 +40,7 @@ from negative_dataset_controls import (
 
 SPLIT_TYPES = ("random", "aptamer", "molecule")
 LGBM_EVAL_PROTOCOL = "train_test_only"
-SPLIT_SOURCE = "aptabench_official_json"
+SPLIT_SOURCE = "aptabench_json"
 
 
 @dataclass
@@ -62,7 +62,7 @@ def make_folds(
     *,
     splits_dir: str | Path | None = None,
 ) -> list[SplitBundle]:
-    """Official AptaBench 5-fold JSON: train_idx vs val_idx (held-out test).
+    """AptaBench 5-fold JSON: train_idx vs val_idx (held-out test).
 
     ``val_idx`` is the published held-out fold (~20%). ERE is train/test
     only, so we do not carve a further validation set. Empty val frames stay on
@@ -70,16 +70,16 @@ def make_folds(
     """
     del seed  # splits are fixed; callers still pass seed for generators
     if n_folds != 5:
-        raise ValueError(f"Official AptaBench splits are 5-fold, got n_folds={n_folds}")
+        raise ValueError(f"AptaBench splits are 5-fold, got n_folds={n_folds}")
     if len(df) != 6289:
         raise ValueError(
-            f"Official splits index the 6289-row AptaBench table, got len(df)={len(df)}. "
-            "Use load_official_indexed_pairs()."
+            f"AptaBench split indices refer to the 6289-row AptaBench table, got len(df)={len(df)}. "
+            "Use load_aptabench_indexed_pairs()."
         )
     key = "random" if split_type == "stratified" else split_type
-    if key not in OFFICIAL_SPLIT_FILES:
+    if key not in APTABENCH_SPLIT_FILES:
         raise ValueError(f"Unknown split type: {split_type}")
-    path = Path(splits_dir or OFFICIAL_SPLITS_DIR) / OFFICIAL_SPLIT_FILES[key]
+    path = Path(splits_dir or APTABENCH_SPLITS_DIR) / APTABENCH_SPLIT_FILES[key]
     folds_json = json.loads(path.read_text(encoding="utf-8"))
     if len(folds_json) != 5:
         raise ValueError(f"{path} must contain 5 folds, got {len(folds_json)}")
@@ -157,7 +157,7 @@ def run_ere_lgbm(
     methods = methods or list(NEGATIVE_METHODS)
     split_types = split_types or list(SPLIT_TYPES)
     rng = np.random.default_rng(seed)
-    df, data_stats = load_official_indexed_pairs(data_path)
+    df, data_stats = load_aptabench_indexed_pairs(data_path)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
 
@@ -565,7 +565,7 @@ def _write_report(
         "- aptamer-disjoint: Kmer4 + ChemBERTa",
         "- StandardScaler fit on train fold (AptaBench screening.py); fixed LightGBM (no Optuna)",
         "",
-        "Splits: official AptaBench JSON (stratified / disjoint_aptamer / disjoint_molecule); `val_idx` is the held-out test fold.",
+        "Splits: AptaBench JSON (stratified / disjoint_aptamer / disjoint_molecule); `val_idx` is the held-out test fold.",
         "Negative datasets are matched to the original split negative count and ligand distribution.",
         "",
     ]

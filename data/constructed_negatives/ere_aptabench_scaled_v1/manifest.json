@@ -1,5 +1,5 @@
 {
-  "run_id": "ere_official_scaled_v1",
+  "run_id": "ere_aptabench_scaled_v1",
   "purpose": "Release tables of constructed negatives; does NOT retrain models",
   "metrics_unchanged": "Keep existing results/*/ere_metrics.csv from original ERE runs. This export only materializes negative pairs.",
   "seed": 42,
@@ -27,8 +27,8 @@
   "embeddings": "data/aptabench/embeddings/aptabench_with_embeddings_v3_clamp.parquet",
   "data_stats": {
     "path": "data/aptabench/embeddings/aptabench_with_embeddings_v3_clamp.parquet",
-    "official_table": "data/aptabench/dataset/AptaBench_dataset.csv",
-    "split_source": "aptabench_official_json",
+    "aptabench_table": "data/aptabench/dataset/AptaBench_dataset.csv",
+    "split_source": "aptabench_json",
     "raw_rows": 6289,
     "clean_rows": 6289,
     "n_pos": 3240,
@@ -45,5 +45,5 @@
     "negatives_summary_csv": "negatives_summary.csv",
     "by_fold_csv_tree": true
   },
-  "fidelity_note": "per_split resets RNG to seed at each split, matching official_scaled_v1 resume after aptamer (molecule rebuilt with fresh seed=42). Hard negatives may still differ slightly across library versions."
+  "fidelity_note": "per_split resets RNG to seed at each split, matching aptabench_scaled_v1 resume after aptamer (molecule rebuilt with fresh seed=42). Hard negatives may still differ slightly across library versions."
 }

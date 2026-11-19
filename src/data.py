@@ -17,9 +17,9 @@ DEFAULT_GENERATION = (
     BENCHMARK_ROOT / "data" / "aptabench" / "generation" / "train_fold_generation_summary.csv"
 )
 DEFAULT_CHECKPOINT = BENCHMARK_ROOT / "checkpoints" / "final_micro_model.pth"
-OFFICIAL_TABLE = BENCHMARK_ROOT / "data" / "aptabench" / "dataset" / "AptaBench_dataset.csv"
-OFFICIAL_SPLITS_DIR = BENCHMARK_ROOT / "data" / "aptabench" / "dataset" / "splits"
-OFFICIAL_SPLIT_FILES = {
+APTABENCH_TABLE = BENCHMARK_ROOT / "data" / "aptabench" / "dataset" / "AptaBench_dataset.csv"
+APTABENCH_SPLITS_DIR = BENCHMARK_ROOT / "data" / "aptabench" / "dataset" / "splits"
+APTABENCH_SPLIT_FILES = {
     "random": "stratified.json",
     "stratified": "stratified.json",
     "aptamer": "disjoint_aptamer.json",
@@ -104,35 +104,35 @@ def load_pairs(path: str | Path) -> tuple[pd.DataFrame, dict]:
     return out, stats
 
 
-def load_official_indexed_pairs(
+def load_aptabench_indexed_pairs(
     embeddings_path: str | Path = DEFAULT_DATA,
     *,
-    official_table: str | Path = OFFICIAL_TABLE,
+    aptabench_table: str | Path = APTABENCH_TABLE,
 ) -> tuple[pd.DataFrame, dict]:
-    """6289 official AptaBench rows in published order, embeddings joined by SMILES.
+    """6289 AptaBench rows in published order, embeddings joined by SMILES.
 
     JSON split indices refer to this table, not the cleaned embeddings CSV.
-    Duplicate official rows are kept. Conflicting labels are kept as published.
+    Duplicate published rows are kept. Conflicting labels are kept as published.
     """
-    official_table = Path(official_table)
+    aptabench_table = Path(aptabench_table)
     embeddings_path = Path(embeddings_path)
-    if not official_table.exists():
-        raise FileNotFoundError(f"Official AptaBench table not found: {official_table}")
-    official = _annotate_pair_frame(_read_table(official_table))
-    if len(official) != 6289:
-        raise ValueError(f"Official table must have 6289 rows, got {len(official)}")
-    official["official_idx"] = np.arange(len(official), dtype=int)
+    if not aptabench_table.exists():
+        raise FileNotFoundError(f"AptaBench table not found: {aptabench_table}")
+    aptabench = _annotate_pair_frame(_read_table(aptabench_table))
+    if len(aptabench) != 6289:
+        raise ValueError(f"AptaBench table must have 6289 rows, got {len(aptabench)}")
+    aptabench["aptabench_idx"] = np.arange(len(aptabench), dtype=int)
 
     emb = _annotate_pair_frame(_read_table(embeddings_path))
-    emb_cols = [c for c in emb.columns if c not in official.columns]
+    emb_cols = [c for c in emb.columns if c not in aptabench.columns]
     smi_map = emb.drop_duplicates("canonical_smiles").set_index("canonical_smiles")[emb_cols]
-    joined = official.join(smi_map, on="canonical_smiles", how="left")
+    joined = aptabench.join(smi_map, on="canonical_smiles", how="left")
     n_smi_hit = int(joined["canonical_smiles"].isin(smi_map.index).sum())
     stats = {
         "path": str(embeddings_path),
-        "official_table": str(official_table),
-        "split_source": "aptabench_official_json",
-        "raw_rows": int(len(official)),
+        "aptabench_table": str(aptabench_table),
+        "split_source": "aptabench_json",
+        "raw_rows": int(len(aptabench)),
         "clean_rows": int(len(joined)),
         "n_pos": int((joined["label"] == 1).sum()),
         "n_neg": int((joined["label"] == 0).sum()),

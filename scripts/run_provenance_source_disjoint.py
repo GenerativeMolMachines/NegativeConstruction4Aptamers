@@ -4,7 +4,7 @@
 Does not build a study-disjoint split from origin/buffer. Those columns fail
 the coverage / dominance audit in provenance_splits.py.
 Train negatives: experimental, random_sequence, random_pairing (no learned
-constructors; those pools are official-fold scoped).
+constructors; those pools are AptaBench fold scoped).
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from data import DEFAULT_DATA, load_official_indexed_pairs  # noqa: E402
+from data import DEFAULT_DATA, load_aptabench_indexed_pairs  # noqa: E402
 from ere_lgbm import _eval_model, _fit_model, _labeled_eval  # noqa: E402
 from negative_dataset_controls import build_controlled_negative_dataset  # noqa: E402
 from provenance_splits import audit_provenance, reliable_provenance_columns, source_disjoint_holdouts  # noqa: E402
@@ -41,7 +41,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
-    df, _ = load_official_indexed_pairs(args.data)
+    df, _ = load_aptabench_indexed_pairs(args.data)
     audit = audit_provenance(df)
     audit.to_csv(args.out / "provenance_audit.csv", index=False)
     reliable = reliable_provenance_columns(df)

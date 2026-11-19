@@ -10,7 +10,7 @@
 
 ## About
 
-How much does the way we construct **synthetic non-binders** change an aptamer–small molecule interaction model? This repository compares six constructors on AptaBench. Experimental positives, held-out experimental test pairs, official folds, and the main LightGBM pipeline stay fixed; only the training negatives change.
+How much does the way we construct **synthetic non-binders** change an aptamer–small molecule interaction model? This repository compares six constructors on AptaBench. Experimental positives, held-out experimental test pairs, AptaBench folds, and the main LightGBM pipeline stay fixed; only the training negatives change.
 
 | Data | Evaluation | Reference |
 |---|---|---|
@@ -45,7 +45,7 @@ cd Neurips_AIDAR
 python -m venv .venv
 # Activate .venv for your shell, then:
 pip install -r requirements.txt
-python scripts/02_run_benchmark.py --out results/ere_official_scaled_v1 --lgbm-hard-score
+python scripts/02_run_benchmark.py --out results/ere_aptabench_scaled_v1 --lgbm-hard-score
 ```
 
 The main ERE run uses the released embeddings and generation input. Some optional generation and structure-filtering experiments need pretrained models, a GPU, or ViennaRNA; see [contrastive/README.md](contrastive/README.md).
@@ -54,10 +54,10 @@ The main ERE run uses the released embeddings and generation input. Some optiona
 
 | Analysis | Entry point | Output |
 |---|---|---|
-| Main ERE on official folds | `scripts/02_run_benchmark.py` | `results/ere_official_scaled_v1/` |
-| Cross-negative comparison | `scripts/03_cross_negative_eval.py` | `results/ere_official_scaled_v1/cross_negative_heatmap.csv` |
+| Main ERE on AptaBench folds | `scripts/02_run_benchmark.py` | `results/ere_aptabench_scaled_v1/` |
+| Cross-negative comparison | `scripts/03_cross_negative_eval.py` | `results/ere_aptabench_scaled_v1/cross_negative_heatmap.csv` |
 | Repeated 10% experimental subsets | `scripts/04_run_amplification.py --n-repeats 10` | `results/amplification_repeats10_v1/` |
-| Source-held-out sensitivity | `scripts/run_provenance_official_folds.py` | `results/provenance_official_folds_v1/` |
+| Source-held-out sensitivity | `scripts/run_provenance_aptabench_folds.py` | `results/provenance_aptabench_folds_v1/` |
 | Experimental/synthetic mixes | `scripts/05_run_mix_experiment.py` | `results/ere_fraction_retrain_v1/mix_metrics.csv` and `mix_summary.csv` |
 | Blend and volume controls | `scripts/06_run_blend_volume.py` | `results/ere_blend_volume_v1/blend_volume_metrics.csv` and `blend_volume_summary.csv` |
 

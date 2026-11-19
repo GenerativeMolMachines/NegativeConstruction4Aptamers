@@ -173,7 +173,7 @@ def _drop_entity_overlap(train: pd.DataFrame, test: pd.DataFrame) -> pd.DataFram
     return train.loc[keep].reset_index(drop=True)
 
 
-def official_fold_source_holdouts(
+def aptabench_fold_source_holdouts(
     folds: list,
     *,
     split_type: str,
@@ -183,10 +183,10 @@ def official_fold_source_holdouts(
     min_train_pos: int = 30,
     min_train_neg: int = 30,
 ) -> list[dict]:
-    """Source holdout inside each official fold, with entity overlap removed.
+    """Source holdout inside each AptaBench fold, with entity overlap removed.
 
-    Test pairs are the official held-out fold restricted to one source.
-    Train pairs are the official training fold without that source, then
+    Test pairs are the AptaBench test fold restricted to one source.
+    Train pairs are the AptaBench training fold without that source, then
     without any aptamer or molecule that appears in that test slice.
     A cell is skipped unless both overlaps are exactly zero and the size
     gates pass. This is not a new split of the corpus.
@@ -201,7 +201,7 @@ def official_fold_source_holdouts(
             "test_neg": split.test_neg_exp,
         }
         if any(column not in frame.columns for frame in parts.values()):
-            raise ValueError(f"official fold frames lack column {column!r}")
+            raise ValueError(f"AptaBench fold frames lack column {column!r}")
         tagged = {name: frame.copy() for name, frame in parts.items()}
         for frame in tagged.values():
             frame["_prov"] = _clean(frame[column])

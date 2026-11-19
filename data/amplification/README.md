@@ -12,4 +12,4 @@ Committed summary for **fixed 10% experimental-subset amplification**
 
 Regenerate: `python scripts/04_run_amplification.py` → `results/amplification_v1/`.
 
-Synthetic pools: `data/constructed_negatives/ere_official_scaled_v1/`.
+Synthetic pools: `data/constructed_negatives/ere_aptabench_scaled_v1/`.
