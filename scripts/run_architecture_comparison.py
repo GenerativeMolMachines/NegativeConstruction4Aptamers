@@ -92,7 +92,7 @@ def main():
     if args.epochs < 1:
         parser.error("--epochs must be positive")
     args.out.mkdir(parents=True, exist_ok=True)
-    pools = ROOT / "data/constructed_negatives/ere_fold_local_v2/by_fold"
+    pools = ROOT / "data/constructed_negatives/ere_v2/by_fold"
     data, _ = load_aptabench_indexed_pairs(DEFAULT_DATA)
     seed = 42
     for split in ("random", "molecule"):

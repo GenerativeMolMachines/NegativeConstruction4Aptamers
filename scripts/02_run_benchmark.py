@@ -15,7 +15,7 @@ from ere_lgbm import SPLIT_TYPES, run_ere_lgbm
 
 DEFAULT_DATA = ROOT / "data" / "aptabench" / "embeddings" / "aptabench_with_embeddings_v3_clamp.parquet"
 DEFAULT_GENERATION = ROOT / "data" / "aptabench" / "generation" / "train_fold_generation_summary.csv"
-DEFAULT_OUT = ROOT / "results" / "ere_fold_local_v2"
+DEFAULT_OUT = ROOT / "results" / "ere_v2"
 PAPER_METHODS = (
     "random_sequence", "composition_shuffle", "random_pairing",
     "structure_filtered", "hard_negative", "learned_generated", "experimental",

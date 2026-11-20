@@ -43,14 +43,14 @@ The stratified LightGBM Profile-GRU result in the current paper's Table 4 is **0
 To recalculate Table 3 from the repository root:
 
 ```bash
-python scripts/06_run_blend_volume.py --out results/table3_blend_v2 --blend-only --constructed-root data/constructed_negatives/ere_fold_local_v2 --methods random_sequence,composition_shuffle,random_pairing,structure_filtered
+python scripts/06_run_blend_volume.py --out results/table3_blend_v2 --blend-only --constructed-root data/constructed_negatives/ere_v2 --methods random_sequence,composition_shuffle,random_pairing,structure_filtered
 python scripts/05_run_mix_experiment.py --out results/table3_fraction_retrain_v2 --methods hard_negative,learned_generated --split-types random,aptamer,molecule --mix-fractions 0.10,0.25,0.50,0.75
 python scripts/summarize_table3.py
 ```
 
 The summarizer validates both complete runs and checks that the 0% Blend values reproduce the per-fold ERE results before writing the fold CSV and summary.
 
-The completed revised LightGBM run is recorded in [ere_metrics.csv](results/ere_metrics.csv), with 105 rows across 15 folds. The [paired audit](results/leakage_audit.csv) checks 90 synthetic training sets. The [released fold pools](../data/constructed_negatives/ere_fold_local_v2/by_fold/) are the exact pairs emitted by this run. Cross-negative scores and matched-test inflation are in [cross_negative_metrics.csv](results/cross_negative_metrics.csv) and [synthetic_inflation_metrics.csv](results/synthetic_inflation_metrics.csv).
+The completed revised LightGBM run is recorded in [ere_metrics.csv](results/ere_metrics.csv), with 105 rows across 15 folds. The [paired audit](results/leakage_audit.csv) checks 90 synthetic training sets. The [released fold pools](../data/constructed_negatives/ere_v2/by_fold/) are the exact pairs emitted by this run. Cross-negative scores and matched-test inflation are in [cross_negative_metrics.csv](results/cross_negative_metrics.csv) and [synthetic_inflation_metrics.csv](results/synthetic_inflation_metrics.csv).
 
 The `amplification_*.csv` files record the repeated-subset experiment on the revised ERE pools. Files with the `archived_amplification_` prefix preserve the earlier experiment. Profile-GRU candidates were precomputed. The 10% limit governs the measured negatives supplied directly to LightGBM.
 

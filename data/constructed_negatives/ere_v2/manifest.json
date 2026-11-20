@@ -1,5 +1,5 @@
 {
-  "protocol": "ere_fold_local_v2",
+  "protocol": "ere_v2",
   "seed": 42,
   "folds_per_split": 5,
   "split_types": [

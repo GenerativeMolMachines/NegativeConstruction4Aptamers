@@ -21,11 +21,11 @@ negatives:
   standard_scaler: true
 generation:
   summary_csv: data/aptabench/generation/train_fold_generation_summary.csv
-constructed_negatives: data/constructed_negatives/ere_fold_local_v2
+constructed_negatives: data/constructed_negatives/ere_v2
 amplification_summary: analyses/results/amplification_summary.csv
 outputs:
   ere_stratified: results/ere_aptabench_v1
-  ere: results/ere_fold_local_v2
+  ere: results/ere_v2
   mix_fraction_retrain: results/ere_fraction_retrain_v1
   blend_volume: results/ere_blend_volume_v1
   figures: results/figures

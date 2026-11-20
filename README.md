@@ -75,7 +75,7 @@ The three-panel paper figure is written to `results/figures/fig_main_comparison.
 | Path | Contents |
 |---|---|
 | [data/aptabench/](data/aptabench/) | AptaBench table, split indices, embeddings, and generation input |
-| [Revised fold pools](data/constructed_negatives/ere_fold_local_v2/by_fold/) | Negative sets used for the current ERE results |
+| [Revised fold pools](data/constructed_negatives/ere_v2/by_fold/) | Negative sets used for the current ERE results |
 | [Archived fold pools](data/constructed_negatives/ere_aptabench_scaled_v1/) | Earlier experiment inputs retained for historical comparison |
 | [src/](src/) | Constructors, data loading, ERE, and analysis code |
 | [contrastive/](contrastive/) | Contrastive model and GRU generation code |
