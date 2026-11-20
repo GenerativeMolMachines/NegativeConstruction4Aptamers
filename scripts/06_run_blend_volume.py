@@ -18,9 +18,9 @@ from blend_volume_experiment import (
     run_blend_volume_experiment,
 )
 
-DEFAULT_DATA = ROOT / "data" / "aptabench" / "embeddings" / "aptabench_with_embeddings_v3_clamp.parquet"
+DEFAULT_DATA = ROOT / "data" / "aptabench" / "embeddings" / "aptabench_embeddings.parquet"
 DEFAULT_GENERATION = ROOT / "data" / "aptabench" / "generation" / "train_fold_generation_summary.csv"
-DEFAULT_OUT = ROOT / "results" / "ere_blend_volume_v1"
+DEFAULT_OUT = ROOT / "results" / "blend_volume"
 
 
 def parse_args() -> argparse.Namespace:

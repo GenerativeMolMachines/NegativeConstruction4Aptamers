@@ -10,7 +10,7 @@ import pandas as pd
 
 BENCHMARK_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATA = (
-    BENCHMARK_ROOT / "data" / "aptabench" / "embeddings" / "aptabench_with_embeddings_v3_clamp.parquet"
+    BENCHMARK_ROOT / "data" / "aptabench" / "embeddings" / "aptabench_embeddings.parquet"
 )
 DEFAULT_RAW = BENCHMARK_ROOT / "data" / "aptabench" / "dataset" / "AptaBench_dataset.csv"
 DEFAULT_GENERATION = (

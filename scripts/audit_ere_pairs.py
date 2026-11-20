@@ -57,7 +57,7 @@ def audit(pool_root, data):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("pool_root", type=Path)
-    parser.add_argument("--data", default=ROOT / "data/aptabench/embeddings/aptabench_with_embeddings_v3_clamp.parquet")
+    parser.add_argument("--data", default=ROOT / "data/aptabench/embeddings/aptabench_embeddings.parquet")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--allow-partial", action="store_true")
     args = parser.parse_args()

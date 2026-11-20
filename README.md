@@ -48,8 +48,8 @@ cd Neurips_AIDAR
 python -m venv .venv
 # Activate .venv for your shell, then:
 pip install -r requirements.txt
-python scripts/02_run_benchmark.py --lgbm-hard-score --out results/ere_v2
-python scripts/audit_ere_pairs.py results/ere_v2/constructed --out results/ere_v2/leakage_audit.csv
+python scripts/02_run_benchmark.py --lgbm-hard-score --out results/ere
+python scripts/audit_ere_pairs.py results/ere/constructed --out results/ere/leakage_audit.csv
 ```
 
 The main ERE run uses the released embeddings and generation input. Some optional generation and structure-filtering experiments need pretrained models, a GPU, or ViennaRNA; see [contrastive/README.md](contrastive/README.md).
@@ -58,11 +58,11 @@ The main ERE run uses the released embeddings and generation input. Some optiona
 
 | Analysis | Entry point | Output |
 |---|---|---|
-| Main ERE on AptaBench folds | `scripts/02_run_benchmark.py --lgbm-hard-score --out results/ere_v2` | `results/ere_v2/` |
-| Cross-negative comparison | `scripts/03_cross_negative_eval.py --cross-csv results/ere_v2/cross_negative_metrics.csv --out results/ere_v2/cross_negative_heatmap.csv` | `results/ere_v2/cross_negative_heatmap.csv` |
-| Repeated 10% experimental subsets | `scripts/04_run_amplification.py --n-repeats 10 --out results/amplification_v2` | `results/amplification_v2/` |
-| Source-held-out sensitivity | `scripts/run_provenance_aptabench_folds.py` | `results/provenance_aptabench_folds_v1/` |
-| Table 3 Blend and Fraction-retrain | [Complete run commands](analyses/README.md#main-ere-protocol-revision) | `results/table3_v2/table3_fold_metrics.csv` and `table3_summary.csv` |
+| Main ERE on AptaBench folds | `scripts/02_run_benchmark.py --lgbm-hard-score --out results/ere` | `results/ere/` |
+| Cross-negative comparison | `scripts/03_cross_negative_eval.py --cross-csv results/ere/cross_negative_metrics.csv --out results/ere/cross_negative_heatmap.csv` | `results/ere/cross_negative_heatmap.csv` |
+| Repeated 10% experimental subsets | `scripts/04_run_amplification.py --n-repeats 10 --out results/amplification` | `results/amplification/` |
+| Source-held-out sensitivity | `scripts/run_provenance_aptabench_folds.py` | `results/provenance_aptabench_folds/` |
+| Table 3 Blend and Fraction-retrain | [Complete run commands](analyses/README.md#main-ere-protocol-revision) | `results/table3/table3_fold_metrics.csv` and `table3_summary.csv` |
 
 Summary CSVs and interpretation are in [analyses/](analyses/). The commands write the outputs listed above when run from the repository root. Released analysis CSVs are available under `analyses/results/`.
 
@@ -75,7 +75,7 @@ The three-panel paper figure is written to `results/figures/fig_main_comparison.
 | Path | Contents |
 |---|---|
 | [data/aptabench/](data/aptabench/) | AptaBench table, split indices, embeddings, and generation input |
-| [Revised fold pools](data/constructed_negatives/ere_v2/by_fold/) | Negative sets used for the current ERE results |
+| [Revised fold pools](data/constructed_negatives/ere/by_fold/) | Negative sets used for the current ERE results |
 | [Archived fold pools](data/constructed_negatives/ere_aptabench_scaled_v1/) | Earlier experiment inputs retained for historical comparison |
 | [src/](src/) | Constructors, data loading, ERE, and analysis code |
 | [contrastive/](contrastive/) | Contrastive model and GRU generation code |

@@ -25,7 +25,7 @@ from ere_lgbm import _eval_model, _fit_model, _labeled_eval  # noqa: E402
 from negative_dataset_controls import build_controlled_negative_dataset  # noqa: E402
 from provenance_splits import audit_provenance, reliable_provenance_columns, source_disjoint_holdouts  # noqa: E402
 
-DEFAULT_OUT = ROOT / "results" / "provenance_source_disjoint_v1"
+DEFAULT_OUT = ROOT / "results" / "provenance_source_disjoint"
 METHODS = ("experimental", "random_sequence", "random_pairing")
 
 

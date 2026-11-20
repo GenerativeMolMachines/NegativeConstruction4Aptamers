@@ -13,9 +13,9 @@ sys.path.insert(0, str(ROOT / "src"))
 from mix_experiment import DEFAULT_MIX_FRACTIONS, MIX_PROTOCOL, SYNTHETIC_METHODS, run_mix_experiment
 from ere_lgbm import SPLIT_TYPES
 
-DEFAULT_DATA = ROOT / "data" / "aptabench" / "embeddings" / "aptabench_with_embeddings_v3_clamp.parquet"
+DEFAULT_DATA = ROOT / "data" / "aptabench" / "embeddings" / "aptabench_embeddings.parquet"
 DEFAULT_GENERATION = ROOT / "data" / "aptabench" / "generation" / "train_fold_generation_summary.csv"
-DEFAULT_OUT = ROOT / "results" / "ere_fraction_retrain_v1"
+DEFAULT_OUT = ROOT / "results" / "fraction_retrain"
 
 
 def parse_args() -> argparse.Namespace:

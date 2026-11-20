@@ -16,9 +16,9 @@ from amplification_experiment import (
     summarize_paired_subset_deltas,
 )
 
-DEFAULT_DATA = ROOT / "data" / "aptabench" / "embeddings" / "aptabench_with_embeddings_v3_clamp.parquet"
-DEFAULT_CONSTRUCTED = ROOT / "data" / "constructed_negatives" / "ere_v2"
-DEFAULT_OUT = ROOT / "results" / "amplification_v1"
+DEFAULT_DATA = ROOT / "data" / "aptabench" / "embeddings" / "aptabench_embeddings.parquet"
+DEFAULT_CONSTRUCTED = ROOT / "data" / "constructed_negatives" / "ere"
+DEFAULT_OUT = ROOT / "results" / "amplification"
 
 
 def parse_args() -> argparse.Namespace:

@@ -12,7 +12,7 @@ ARCHITECTURES = {"mlp", "two_tower_mlp", "cnn_dual_encoder"}
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--run", type=Path, default=ROOT / "results/architecture_comparison_v2")
+    parser.add_argument("--run", type=Path, default=ROOT / "results/architecture_comparison")
     parser.add_argument("--epochs", type=int, default=20)
     args = parser.parse_args()
     files = sorted(args.run.glob(f"*_e{args.epochs}.csv"))

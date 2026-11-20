@@ -33,7 +33,7 @@ import pandas as pd
 
 from aptabench_features import feature_spec_for_split
 from data import DEFAULT_DATA, load_aptabench_indexed_pairs, normalize_sequence
-from fold_local_learned import (
+from fraction_retrain import (
     FRACTION_LOCAL_LEARNED_METHODS,
     build_fraction_local_bundle,
     build_fraction_local_negative_dataset,

@@ -13,9 +13,9 @@ sys.path.insert(0, str(ROOT / "src"))
 from negative_dataset_controls import NEGATIVE_METHODS
 from ere_lgbm import SPLIT_TYPES, run_ere_lgbm
 
-DEFAULT_DATA = ROOT / "data" / "aptabench" / "embeddings" / "aptabench_with_embeddings_v3_clamp.parquet"
+DEFAULT_DATA = ROOT / "data" / "aptabench" / "embeddings" / "aptabench_embeddings.parquet"
 DEFAULT_GENERATION = ROOT / "data" / "aptabench" / "generation" / "train_fold_generation_summary.csv"
-DEFAULT_OUT = ROOT / "results" / "ere_v2"
+DEFAULT_OUT = ROOT / "results" / "ere"
 PAPER_METHODS = (
     "random_sequence", "composition_shuffle", "random_pairing",
     "structure_filtered", "hard_negative", "learned_generated", "experimental",

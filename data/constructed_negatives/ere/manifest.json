@@ -1,5 +1,5 @@
 {
-  "protocol": "ere_v2",
+  "protocol": "ere",
   "seed": 42,
   "folds_per_split": 5,
   "split_types": [
@@ -7,8 +7,8 @@
     "aptamer",
     "molecule"
   ],
-  "training_candidate_policy": "Random pairing and Hard negative use training positives",
-  "measured_pair_policy": "Exclude measured pairs for Random pairing and Hard negative",
+  "training_candidate_policy": "Random pairing and Hard negatives use training positives",
+  "measured_pair_policy": "Exclude measured pairs for Random pairing and Hard negatives",
   "pool_csv_count": 210,
   "audited_synthetic_train_sets": 90,
   "metrics_sha256": {

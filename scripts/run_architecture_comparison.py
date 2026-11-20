@@ -85,14 +85,14 @@ def train_predict(name, inputs, labels, n_train, epochs, seed, device):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--out", type=Path, default=ROOT / "results/architecture_comparison_v2")
+    parser.add_argument("--out", type=Path, default=ROOT / "results/architecture_comparison")
     parser.add_argument("--epochs", type=int, default=20)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     args = parser.parse_args()
     if args.epochs < 1:
         parser.error("--epochs must be positive")
     args.out.mkdir(parents=True, exist_ok=True)
-    pools = ROOT / "data/constructed_negatives/ere_v2/by_fold"
+    pools = ROOT / "data/constructed_negatives/ere/by_fold"
     data, _ = load_aptabench_indexed_pairs(DEFAULT_DATA)
     seed = 42
     for split in ("random", "molecule"):

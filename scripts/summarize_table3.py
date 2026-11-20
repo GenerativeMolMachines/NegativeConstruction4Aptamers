@@ -27,9 +27,9 @@ def validate(path, methods, fractions, protocol):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--blend", type=Path, default=ROOT / "results/table3_blend_v2/blend_volume_metrics.csv")
-    parser.add_argument("--retrain", type=Path, default=ROOT / "results/table3_fraction_retrain_v2/mix_metrics.csv")
-    parser.add_argument("--out", type=Path, default=ROOT / "results/table3_v2")
+    parser.add_argument("--blend", type=Path, default=ROOT / "results/table3_blend/blend_volume_metrics.csv")
+    parser.add_argument("--retrain", type=Path, default=ROOT / "results/table3_fraction_retrain/mix_metrics.csv")
+    parser.add_argument("--out", type=Path, default=ROOT / "results/table3")
     args = parser.parse_args()
     blend = validate(args.blend, BLEND, (0.0, *FRACTIONS, 1.0), "Blend")
     retrain = validate(args.retrain, RETRAIN, FRACTIONS, "Fraction-retrain")

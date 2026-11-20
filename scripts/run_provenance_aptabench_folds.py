@@ -28,7 +28,7 @@ from ere_lgbm import _eval_model, _fit_model, _labeled_eval, make_folds  # noqa:
 from negative_dataset_controls import build_controlled_negative_dataset  # noqa: E402
 from provenance_splits import aptabench_fold_source_holdouts  # noqa: E402
 
-DEFAULT_OUT = ROOT / "results" / "provenance_aptabench_folds_v1"
+DEFAULT_OUT = ROOT / "results" / "provenance_aptabench_folds"
 METHODS = ("experimental", "random_sequence", "random_pairing")
 SPLIT_TYPES = ("random", "aptamer", "molecule")
 
