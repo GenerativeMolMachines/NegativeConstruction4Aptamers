@@ -24,7 +24,7 @@ How much does the way we construct **synthetic non-binders** change an aptamerâ€
 
 1. Use one released AptaBench train/test fold.
 2. Keep its positives and experimental test pairs fixed.
-3. Construct training negatives using only permitted fold-local information.
+3. Construct training negatives using the information allowed for each training fold.
 4. Fit the same classifier and evaluate on the same experimental test pairs.
 
 | Constructor in the paper | ID in code and CSV | Core idea | Experimental-negative information used by the constructor |
@@ -33,7 +33,7 @@ How much does the way we construct **synthetic non-binders** change an aptamerâ€
 | Composition shuffle | `composition_shuffle` | Shuffle aptamers while preserving composition | Ligand counts for matching |
 | Structure-filtered | `structure_filtered` | Filter candidate sequences by structure | Ligand counts for matching |
 | Random pairing | `random_pairing` | Rewire observed aptamers and ligands | Ligand counts; known pairs excluded |
-| Hard negatives | `hard_negative` | Select difficult candidates with a fold-local scorer | Experimental negatives train the scorer |
+| Hard negatives | `hard_negative` | Select difficult candidates with a scorer trained within each fold | Experimental negatives train the scorer |
 | Profile-GRU | `learned_generated` | Rank precomputed sequence candidates for each fold | Experimental-negative profiles and contrastive supervision |
 
 The `split_type` column in current result CSVs, including the [source-held-out metrics for Table 6](analyses/results/fold_source_metrics.csv), uses `random` for **Stratified**, `aptamer` for **Aptamer-disjoint**, and `molecule` for **Molecule-disjoint**. Use the same IDs in `by_fold/` paths and command-line split arguments.
@@ -48,8 +48,8 @@ cd Neurips_AIDAR
 python -m venv .venv
 # Activate .venv for your shell, then:
 pip install -r requirements.txt
-python scripts/02_run_benchmark.py --lgbm-hard-score
-python scripts/audit_ere_pairs.py results/ere_fold_local_v2/constructed --out results/ere_fold_local_v2/leakage_audit.csv
+python scripts/02_run_benchmark.py --lgbm-hard-score --out results/ere_v2
+python scripts/audit_ere_pairs.py results/ere_v2/constructed --out results/ere_v2/leakage_audit.csv
 ```
 
 The main ERE run uses the released embeddings and generation input. Some optional generation and structure-filtering experiments need pretrained models, a GPU, or ViennaRNA; see [contrastive/README.md](contrastive/README.md).
@@ -58,15 +58,15 @@ The main ERE run uses the released embeddings and generation input. Some optiona
 
 | Analysis | Entry point | Output |
 |---|---|---|
-| Main ERE on AptaBench folds | `scripts/02_run_benchmark.py` | `results/ere_fold_local_v2/` |
-| Cross-negative comparison | `scripts/03_cross_negative_eval.py` | `results/ere_fold_local_v2/cross_negative_heatmap.csv` |
-| Repeated 10% experimental subsets | `scripts/04_run_amplification.py --n-repeats 10 --out results/amplification_fold_local_v2` | `results/amplification_fold_local_v2/` |
+| Main ERE on AptaBench folds | `scripts/02_run_benchmark.py --lgbm-hard-score --out results/ere_v2` | `results/ere_v2/` |
+| Cross-negative comparison | `scripts/03_cross_negative_eval.py --cross-csv results/ere_v2/cross_negative_metrics.csv --out results/ere_v2/cross_negative_heatmap.csv` | `results/ere_v2/cross_negative_heatmap.csv` |
+| Repeated 10% experimental subsets | `scripts/04_run_amplification.py --n-repeats 10 --out results/amplification_v2` | `results/amplification_v2/` |
 | Source-held-out sensitivity | `scripts/run_provenance_aptabench_folds.py` | `results/provenance_aptabench_folds_v1/` |
 | Table 3 Blend and Fraction-retrain | [Complete run commands](analyses/README.md#main-ere-protocol-revision) | `results/table3_v2/table3_fold_metrics.csv` and `table3_summary.csv` |
 
 Summary CSVs and interpretation are in [analyses/](analyses/). The commands write the outputs listed above when run from the repository root. Released analysis CSVs are available under `analyses/results/`.
 
-Run `python scripts/07_make_figures.py` to regenerate the current ERE plots from the included CSVs. Use `--ere-inputs results/ere_fold_local_v2` to plot a new run. The volume and mix plots reproduce separate historical experiments.
+Run `python scripts/07_make_figures.py` to regenerate the ERE plots from the published CSVs. To plot a new run, pass its output directory with `--ere-inputs`. The script also generates the archived volume and mix plots from their historical CSVs.
 
 The three-panel paper figure is written to `results/figures/fig_main_comparison.pdf`. It combines the revised ERE scores, matched-test differences, and the repeated molecule-disjoint 10% control.
 

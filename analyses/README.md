@@ -5,7 +5,7 @@ These CSVs summarize repeated-subset experiments and source-held-out sensitivity
 To reproduce the analyses from the repository root:
 
 ```bash
-python scripts/04_run_amplification.py --n-repeats 10 --out results/amplification_fold_local_v2
+python scripts/04_run_amplification.py --n-repeats 10 --out results/amplification_v2
 python scripts/run_provenance_aptabench_folds.py --out results/provenance_aptabench_folds_v1
 ```
 
