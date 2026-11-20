@@ -30,13 +30,13 @@ How much does the way we construct **synthetic non-binders** change an aptamerâ€
 | Constructor in the paper | ID in code and CSV | Core idea | Experimental-negative information used by the constructor |
 |---|---|---|---|
 | Random sequence | `random_sequence` | Generate decoy sequences | Ligand counts for matching |
-| AptaBLE shuffle | `composition_shuffle` | Shuffle aptamers while preserving composition | Ligand counts for matching |
+| Composition shuffle | `composition_shuffle` | Shuffle aptamers while preserving composition | Ligand counts for matching |
 | Structure-filtered | `structure_filtered` | Filter candidate sequences by structure | Ligand counts for matching |
 | Random pairing | `random_pairing` | Rewire observed aptamers and ligands | Ligand counts; known pairs excluded |
 | Hard negatives | `hard_negative` | Select difficult candidates with a fold-local scorer | Experimental negatives train the scorer |
 | Profile-GRU | `learned_generated` | Rank precomputed sequence candidates for each fold | Experimental-negative profiles and contrastive supervision |
 
-The split IDs `random`, `aptamer`, and `molecule` correspond to Stratified, Aptamer-disjoint, and Molecule-disjoint in the paper.
+The CSV column `split_type`, the split folders under `by_fold/`, and command-line split arguments use the same IDs: `random` = **Stratified**, `aptamer` = **Aptamer-disjoint**, and `molecule` = **Molecule-disjoint**.
 
 The **experimental** row is a reference training condition, not a synthetic constructor. Except for that reference and explicit blend controls, the downstream classifier trains on emitted synthetic negatives.
 

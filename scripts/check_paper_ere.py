@@ -8,7 +8,7 @@ import pandas as pd
 
 METHODS = {
     "Random sequence": "random_sequence",
-    "AptaBLE shuffle": "composition_shuffle",
+    "Composition shuffle": "composition_shuffle",
     "Random pairing": "random_pairing",
     "Structure-filtered": "structure_filtered",
     "Hard negatives": "hard_negative",

@@ -29,7 +29,7 @@ APTABENCH6 = [
 ]
 LABELS = {
     "random_sequence": "Random seq",
-    "composition_shuffle": "Comp. shuffle",
+    "composition_shuffle": "Composition shuffle",
     "random_pairing": "Random pairing",
     "structure_filtered": "Struct-filtered",
     "hard_negative": "Hard negative",
@@ -227,7 +227,7 @@ def fig_methods_overview() -> None:
     ax.axis("off")
     rows = [
         ("random_sequence", "Random sequence decoy", 4.2),
-        ("composition_shuffle", "Composition shuffle (AptaBLE)", 3.5),
+        ("composition_shuffle", "Composition shuffle", 3.5),
         ("random_pairing", "Real seq × random ligand", 2.8),
         ("structure_filtered", "Random + MFE filter", 2.1),
         ("hard_negative", "High-score non-interactors", 1.4),
@@ -290,7 +290,7 @@ def fig_main_comparison() -> None:
     colors = dict.fromkeys(APTABENCH6, "#248e82")
     colors.update(experimental="#6d6586", random_pairing="#414ba8",
                   hard_negative="#414ba8", learned_generated="#de791d")
-    labels = dict(LABELS, random_sequence="Random sequence", composition_shuffle="AptaBLE shuffle",
+    labels = dict(LABELS, random_sequence="Random sequence", composition_shuffle="Composition shuffle",
                   structure_filtered="Structure-filtered", hard_negative="Hard negatives")
     fig, (a, b, c) = plt.subplots(1, 3, figsize=(17.3, 5.55),
                                  gridspec_kw={"width_ratios": [1.08, 1, 1]})
