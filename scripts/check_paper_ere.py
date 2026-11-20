@@ -32,6 +32,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("manuscript", type=Path)
     parser.add_argument("metrics", type=Path)
+    parser.add_argument("--amplification", type=Path, help="Directory with fold-level amplification metrics")
     args = parser.parse_args()
     source = args.manuscript.read_text(encoding="utf-8")
     frame = pd.read_csv(args.metrics)
@@ -59,12 +60,35 @@ def main():
     for split, row in zip(("random", "molecule"), rows):
         checks.append((f"Architecture comparison / {split}", scores(row),
                        [expected(split, method) for method in APPENDIX_METHODS]))
+    if args.amplification:
+        methods = {
+            "exp_10_only": r"10\% experimental only",
+            "exp_10_oversample": r"10\% experimental, oversampled",
+            "exp_10_plus_rp": r"10\% experimental + random pairing",
+            "exp_10_plus_generated": r"10\% experimental + Profile-GRU",
+        }
+        raw = pd.read_csv(args.amplification / "amplification_metrics.csv")
+        if len(raw) != 200 or raw.duplicated(["fold", "repeat", "mode"]).any():
+            raise SystemExit("Expected 200 distinct amplification scores")
+        draws = raw.pivot(index=["fold", "repeat"], columns="mode", values="test_roc_auc")
+        if draws.shape != (50, 4) or set(draws.columns) != set(methods) or draws.isna().any().any():
+            raise SystemExit("Expected four scored methods in each of 50 matched draws")
+        rendered = table(source, "tab:robust-amplification-repeats")
+        for method, name in methods.items():
+            values = draws[method]
+            delta = values - draws["exp_10_only"]
+            mean = "$%.3f \\pm %.3f$" % (values.mean(), values.std())
+            change = "$0$" if method == "exp_10_only" else "$%.4f \\pm %.4f$" % (delta.mean(), delta.std())
+            wins = "reference" if method == "exp_10_only" else f"{int(delta.gt(0).sum())}/50"
+            row = next((line for line in rendered.splitlines() if line.startswith(name + " &")), "")
+            checks.append((name, [part.strip() for part in row.removesuffix(r"\\").split("&")[1:]],
+                           [mean, change, wins]))
     mismatches = [(label, actual, reference) for label, actual, reference in checks if actual != reference]
     for label, actual, reference in mismatches:
         print(f"{label}: manuscript {actual} | CSV {reference}")
     if mismatches:
         raise SystemExit(1)
-    print("Verified Table 1 and both LightGBM rows of the architecture comparison.")
+    print(f"Verified {len(checks)} manuscript rows against fold-level CSVs.")
 
 
 if __name__ == "__main__":

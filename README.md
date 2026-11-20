@@ -80,7 +80,7 @@ Run `python scripts/07_make_figures.py` to regenerate the current ERE plots from
 ## Interpretation
 
 - AptaBench aptamer- and molecule-disjoint folds can share assays and database sources across train and test. The source sensitivity analysis holds out a database source within each AptaBench fold.
-- In the historical 10% control, ten independent redraws per molecule-disjoint fold give mean ROC-AUC **0.826 ± 0.070** for 10%-only experimental negatives. Redraws share test folds. The historical synthetic augmentation arms used the earlier pools.
+- Across ten redraws per molecule-disjoint fold, the 10%-only control gives ROC-AUC **0.826 ± 0.070**. Oversampling gives **0.824 ± 0.072**, adding Profile-GRU **0.802 ± 0.065**, and adding Random pairing **0.678 ± 0.095**. Synthetic augmentation uses the revised ERE pools. Redraws share test folds. The 10% limit applies to measured negatives supplied directly to LightGBM. [Summary and paired differences](analyses/).
 - The revised comparison holds the LightGBM classifier fixed. Other architectures require evaluation on the revised pools.
 
 ## License and data

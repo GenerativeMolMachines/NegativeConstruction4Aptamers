@@ -5,7 +5,7 @@ These CSVs summarize repeated-subset experiments and source-held-out sensitivity
 To reproduce the analyses from the repository root:
 
 ```bash
-python scripts/04_run_amplification.py --n-repeats 10 --out results/amplification_repeats10_v1
+python scripts/04_run_amplification.py --n-repeats 10 --out results/amplification_fold_local_v2
 python scripts/run_provenance_aptabench_folds.py --out results/provenance_aptabench_folds_v1
 ```
 
@@ -16,6 +16,8 @@ The provenance runner uses the published AptaBench folds; its source filtering l
 - `results/amplification_metrics.csv`: one row per fold, redraw, and training mode (200 rows).
 - `results/amplification_summary.csv`: mean and dispersion across the repeated runs.
 - `results/amplification_paired_deltas.csv`: differences between augmentation modes and the same 10% draw.
+- `results/amplification_fixed_exp_subsets.csv`: selected experimental negatives for each draw.
+- `results/amplification_run_meta.json`: split, seed, redraw count, and input pools.
 
 The 10% versus full experimental pool comparison is descriptive because the training sets are not a matched pair of independent redraws. The ten redraws within a fold share the same held-out test data.
 
@@ -36,4 +38,4 @@ The published Profile-GRU candidate CSV contains no split or fold identifiers. T
 
 The completed revised LightGBM run is recorded in [ere_metrics.csv](results/ere_metrics.csv), with 105 rows across 15 folds. The [paired audit](results/leakage_audit.csv) checks 90 synthetic training sets. The [released fold pools](../data/constructed_negatives/ere_fold_local_v2/by_fold/) are the exact pairs emitted by this run. Cross-negative scores and matched-test inflation are in [cross_negative_metrics.csv](results/cross_negative_metrics.csv) and [synthetic_inflation_metrics.csv](results/synthetic_inflation_metrics.csv).
 
-The existing `amplification_*.csv` files record the historical repeated-subset experiment. Its RP and Profile-GRU inputs came from the earlier export. Running the amplification command now uses the revised pools.
+The `amplification_*.csv` files record the repeated-subset experiment on the revised ERE pools. Files with the `archived_amplification_` prefix preserve the earlier experiment. Profile-GRU candidates were precomputed. The 10% limit governs the measured negatives supplied directly to LightGBM.

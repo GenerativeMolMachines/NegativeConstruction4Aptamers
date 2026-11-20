@@ -1,0 +1,15 @@
+{
+  "protocol": "amplification_exp_v1",
+  "split_type": "molecule",
+  "n_folds": 5,
+  "seed": 42,
+  "exp_fraction": 0.1,
+  "n_repeats": 10,
+  "modes": [
+    "exp_10_only",
+    "exp_10_oversample",
+    "exp_10_plus_rp",
+    "exp_10_plus_generated"
+  ],
+  "constructed_negatives_root": "data/constructed_negatives/ere_fold_local_v2"
+}
