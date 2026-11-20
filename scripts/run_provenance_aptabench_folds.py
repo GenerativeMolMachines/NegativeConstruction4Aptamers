@@ -30,7 +30,7 @@ from provenance_splits import aptabench_fold_source_holdouts  # noqa: E402
 
 DEFAULT_OUT = ROOT / "results" / "provenance_aptabench_folds_v1"
 METHODS = ("experimental", "random_sequence", "random_pairing")
-SPLIT_TYPES = ("stratified", "aptamer", "molecule")
+SPLIT_TYPES = ("random", "aptamer", "molecule")
 
 
 def _seq_set(frame: pd.DataFrame) -> set[str]:
@@ -107,23 +107,17 @@ def _filter_clean(
     return frame.loc[keep].reset_index(drop=True)
 
 
-def _load_done(path: Path) -> set[tuple]:
-    if not path.exists():
-        return set()
-    prev = pd.read_csv(path)
-    return {
-        (str(r.split_type), int(r.fold), str(r.held_out_source), str(r.train_negative))
-        for r in prev.itertuples(index=False)
-    }
-
-
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--out", type=Path, default=DEFAULT_OUT)
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--audit-only", action="store_true")
     p.add_argument("--splits", default=",".join(SPLIT_TYPES))
-    return p.parse_args()
+    args = p.parse_args()
+    args.splits = [s.strip() for s in args.splits.split(",") if s.strip()]
+    if not args.splits or set(args.splits) - set(SPLIT_TYPES):
+        p.error("--splits must contain IDs from random, aptamer, molecule")
+    return args
 
 
 def main() -> int:
@@ -132,15 +126,21 @@ def main() -> int:
     df, _ = load_aptabench_indexed_pairs()
     known_pos = known_pairs(df, {1})
     known_pos = {(normalize_sequence(s), m.strip()) for s, m in known_pos}
-    split_types = [s.strip() for s in args.splits.split(",") if s.strip()]
     metric_path = args.out / "fold_source_metrics.csv"
-    done = _load_done(metric_path)
     rows: list[dict] = []
     if metric_path.exists():
-        rows = pd.read_csv(metric_path).to_dict("records")
+        previous = pd.read_csv(metric_path)
+        legacy = previous["split_type"].eq("stratified").any()
+        previous["split_type"] = previous["split_type"].replace("stratified", "random")
+        if previous.duplicated(["split_type", "fold", "held_out_source", "train_negative"]).any():
+            raise ValueError(f"Duplicate source-holdout keys in {metric_path}")
+        rows = previous.to_dict("records")
+        if legacy and not args.audit_only:
+            previous.to_csv(metric_path, index=False)
+    done = {(r["split_type"], int(r["fold"]), r["held_out_source"], r["train_negative"]) for r in rows}
 
     audit_rows = []
-    for split_type in split_types:
+    for split_type in args.splits:
         folds = make_folds(df, split_type, 5, args.seed)
         cells = aptabench_fold_source_holdouts(folds, split_type=split_type)
         for cell in cells:
@@ -240,7 +240,7 @@ def main() -> int:
     pd.DataFrame(audit_rows).to_csv(args.out / "fold_source_audit.csv", index=False)
     meta = {
         "protocol": "aptabench_fold_source_holdout_v1",
-        "splits": split_types,
+        "splits": args.splits,
         "methods": list(METHODS),
         "entity_overlap_allowed": False,
         "same_source_in_train_allowed": False,

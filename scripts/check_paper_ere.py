@@ -135,7 +135,7 @@ def main():
         raise SystemExit("Expected 28 source folds with three scored methods each")
     source_table = table(source, "tab:source-fold")
     for (split, held_out), group in source_draws.groupby(level=[0, 1]):
-        label = split_labels["random" if split == "stratified" else split]
+        label = split_labels[split]
         prefix = f"{label} & {held_out} & "
         row = next((line for line in source_table.splitlines() if line.startswith(prefix)), "")
         expected_cells = [str(len(group))]

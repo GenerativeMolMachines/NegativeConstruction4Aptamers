@@ -23,7 +23,7 @@ The 10% versus full experimental pool comparison is descriptive because the trai
 
 ## Source-held-out sensitivity analysis
 
-- `results/fold_source_metrics.csv`: Table 6 metrics by AptaBench fold, held-out source, and negative-construction method. Filter with `split_type=stratified` for Stratified. The main ERE CSVs use `split_type=random` for that split.
+- `results/fold_source_metrics.csv`: Table 6 metrics by AptaBench fold, held-out source, and negative-construction method. Use `split_type=random` for Stratified, as in the main ERE CSVs.
 - `results/fold_source_audit.csv`: overlap and eligibility checks.
 
 The scored train pool excludes the test slice's source and all aptamers and molecules occurring in that slice. Only experimental, random-sequence, and random-pairing negatives were evaluated in this analysis. This is a database-source sensitivity analysis within the AptaBench folds, not an assay-disjoint evaluation. Some source-fold combinations are skipped by the minimum class-size rule, so rows must not be interpreted as independent panels.
@@ -40,7 +40,15 @@ For the historical stratified comparison, the original main ERE and the later Li
 
 The stratified LightGBM Profile-GRU result in the current paper's Table 4 is **0.669 ± 0.013 ROC-AUC** across five folds, computed from [ere_metrics.csv](results/ere_metrics.csv) at `split_type=random` and `train_negative=learned_generated`. The earlier **0.672 ± 0.017** appears only in the [archived Table 4 transcription](results/archived_table4_reported_summary.csv). The available archived runs do not reproduce that earlier value.
 
-To recalculate Table 3, run the four Blend methods with `06_run_blend_volume.py --blend-only --constructed-root data/constructed_negatives/ere_fold_local_v2` and the two Fraction-retrain methods with `05_run_mix_experiment.py` at fractions 0.10, 0.25, 0.50, and 0.75. Use stratified, aptamer-disjoint, and molecule-disjoint splits. `summarize_table3.py` validates complete runs and checks that the 0% Blend values reproduce the per-fold ERE values before writing the new fold CSV and summary.
+To recalculate Table 3 from the repository root:
+
+```bash
+python scripts/06_run_blend_volume.py --out results/table3_blend_v2 --blend-only --constructed-root data/constructed_negatives/ere_fold_local_v2 --methods random_sequence,composition_shuffle,random_pairing,structure_filtered
+python scripts/05_run_mix_experiment.py --out results/table3_fraction_retrain_v2 --methods hard_negative,learned_generated --split-types random,aptamer,molecule --mix-fractions 0.10,0.25,0.50,0.75
+python scripts/summarize_table3.py
+```
+
+The summarizer validates both complete runs and checks that the 0% Blend values reproduce the per-fold ERE results before writing the fold CSV and summary.
 
 The completed revised LightGBM run is recorded in [ere_metrics.csv](results/ere_metrics.csv), with 105 rows across 15 folds. The [paired audit](results/leakage_audit.csv) checks 90 synthetic training sets. The [released fold pools](../data/constructed_negatives/ere_fold_local_v2/by_fold/) are the exact pairs emitted by this run. Cross-negative scores and matched-test inflation are in [cross_negative_metrics.csv](results/cross_negative_metrics.csv) and [synthetic_inflation_metrics.csv](results/synthetic_inflation_metrics.csv).
 

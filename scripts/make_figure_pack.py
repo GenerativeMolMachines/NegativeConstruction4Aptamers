@@ -32,7 +32,7 @@ LABELS = {
     "composition_shuffle": "Composition shuffle",
     "random_pairing": "Random pairing",
     "structure_filtered": "Struct-filtered",
-    "hard_negative": "Hard negative",
+    "hard_negative": "Hard negatives",
     "learned_generated": "Profile-GRU",
     "experimental": "Experimental",
 }

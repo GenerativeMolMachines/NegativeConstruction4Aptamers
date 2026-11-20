@@ -1,7 +1,7 @@
 """Feature builders matching the AptaBench Table 13 baseline choices.
 
 The intended mapping is:
-- random/stratified: Kmer4 aptamer + CLAMP molecule features
+- random (Stratified): Kmer4 aptamer + CLAMP molecule features
 - molecule-disjoint: OneHot aptamer + MorganFP molecule features
 - aptamer-disjoint: Kmer4 aptamer + ChemBERTa molecule features
 """
@@ -28,7 +28,6 @@ except Exception:  # pragma: no cover
 
 SPLIT_FEATURE_SPECS: dict[str, tuple[str, str]] = {
     "random": ("kmer4", "clamp"),
-    "stratified": ("kmer4", "clamp"),
     "molecule": ("onehot", "morgan"),
     "aptamer": ("kmer4", "chemberta"),
 }
@@ -41,7 +40,7 @@ class FeatureSpec:
 
 
 def feature_spec_for_split(split_type: str) -> FeatureSpec:
-    key = "stratified" if split_type == "random" else split_type
+    key = "random" if split_type == "stratified" else split_type
     if key not in SPLIT_FEATURE_SPECS:
         raise ValueError(f"Unknown split type for AptaBench baseline: {split_type}")
     apt, mol = SPLIT_FEATURE_SPECS[key]

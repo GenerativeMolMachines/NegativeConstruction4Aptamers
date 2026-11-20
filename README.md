@@ -36,7 +36,7 @@ How much does the way we construct **synthetic non-binders** change an aptamerâ€
 | Hard negatives | `hard_negative` | Select difficult candidates with a fold-local scorer | Experimental negatives train the scorer |
 | Profile-GRU | `learned_generated` | Rank precomputed sequence candidates for each fold | Experimental-negative profiles and contrastive supervision |
 
-The main ERE CSVs and split folders under `by_fold/` use `random` for **Stratified**, `aptamer` for **Aptamer-disjoint**, and `molecule` for **Molecule-disjoint**. In the [source-held-out metrics for Table 6](analyses/results/fold_source_metrics.csv), use `split_type=stratified` for Stratified. The other two IDs are the same.
+The `split_type` column in current result CSVs, including the [source-held-out metrics for Table 6](analyses/results/fold_source_metrics.csv), uses `random` for **Stratified**, `aptamer` for **Aptamer-disjoint**, and `molecule` for **Molecule-disjoint**. Use the same IDs in `by_fold/` paths and command-line split arguments.
 
 The **experimental** row is a reference training condition, not a synthetic constructor. Except for that reference and explicit blend controls, the downstream classifier trains on emitted synthetic negatives.
 
@@ -62,8 +62,7 @@ The main ERE run uses the released embeddings and generation input. Some optiona
 | Cross-negative comparison | `scripts/03_cross_negative_eval.py` | `results/ere_fold_local_v2/cross_negative_heatmap.csv` |
 | Repeated 10% experimental subsets | `scripts/04_run_amplification.py --n-repeats 10 --out results/amplification_fold_local_v2` | `results/amplification_fold_local_v2/` |
 | Source-held-out sensitivity | `scripts/run_provenance_aptabench_folds.py` | `results/provenance_aptabench_folds_v1/` |
-| Experimental/synthetic mixes | `scripts/05_run_mix_experiment.py` | `results/ere_fraction_retrain_v1/mix_metrics.csv` and `mix_summary.csv` |
-| Blend and volume controls | `scripts/06_run_blend_volume.py` | `results/ere_blend_volume_v1/blend_volume_metrics.csv` and `blend_volume_summary.csv` |
+| Table 3 Blend and Fraction-retrain | [Complete run commands](analyses/README.md#main-ere-protocol-revision) | `results/table3_v2/table3_fold_metrics.csv` and `table3_summary.csv` |
 
 Summary CSVs and interpretation are in [analyses/](analyses/). The commands write the outputs listed above when run from the repository root. Released analysis CSVs are available under `analyses/results/`.
 
