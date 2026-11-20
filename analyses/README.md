@@ -23,7 +23,7 @@ The 10% versus full experimental pool comparison is descriptive because the trai
 
 ## Source-held-out sensitivity analysis
 
-- `results/fold_source_metrics.csv`: metrics by aptabench fold, held-out source, and negative-construction method.
+- `results/fold_source_metrics.csv`: Table 6 metrics by AptaBench fold, held-out source, and negative-construction method. Filter with `split_type=stratified` for Stratified. The main ERE CSVs use `split_type=random` for that split.
 - `results/fold_source_audit.csv`: overlap and eligibility checks.
 
 The scored train pool excludes the test slice's source and all aptamers and molecules occurring in that slice. Only experimental, random-sequence, and random-pairing negatives were evaluated in this analysis. This is a database-source sensitivity analysis within the AptaBench folds, not an assay-disjoint evaluation. Some source-fold combinations are skipped by the minimum class-size rule, so rows must not be interpreted as independent panels.

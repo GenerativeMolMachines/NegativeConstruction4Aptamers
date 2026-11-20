@@ -36,7 +36,7 @@ How much does the way we construct **synthetic non-binders** change an aptamerâ€
 | Hard negatives | `hard_negative` | Select difficult candidates with a fold-local scorer | Experimental negatives train the scorer |
 | Profile-GRU | `learned_generated` | Rank precomputed sequence candidates for each fold | Experimental-negative profiles and contrastive supervision |
 
-The CSV column `split_type`, the split folders under `by_fold/`, and command-line split arguments use the same IDs: `random` = **Stratified**, `aptamer` = **Aptamer-disjoint**, and `molecule` = **Molecule-disjoint**.
+The main ERE CSVs and split folders under `by_fold/` use `random` for **Stratified**, `aptamer` for **Aptamer-disjoint**, and `molecule` for **Molecule-disjoint**. In the [source-held-out metrics for Table 6](analyses/results/fold_source_metrics.csv), use `split_type=stratified` for Stratified. The other two IDs are the same.
 
 The **experimental** row is a reference training condition, not a synthetic constructor. Except for that reference and explicit blend controls, the downstream classifier trains on emitted synthetic negatives.
 
