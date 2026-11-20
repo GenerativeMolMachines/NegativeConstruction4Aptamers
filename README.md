@@ -66,7 +66,7 @@ The main ERE run uses the released embeddings and generation input. Some optiona
 
 Summary CSVs and interpretation are in [analyses/](analyses/). The commands write the outputs listed above when run from the repository root. Released analysis CSVs are available under `analyses/results/`.
 
-Run `python scripts/07_make_figures.py` to regenerate the ERE plots from the published CSVs. To plot a new run, pass its output directory with `--ere-inputs`. The script also generates the archived volume and mix plots from their historical CSVs.
+Run `python scripts/07_make_figures.py` to regenerate the ERE plots from the published CSVs. To plot a new run, pass its output directory with `--ere-inputs`.
 
 The three-panel paper figure is written to `results/figures/fig_main_comparison.pdf`. It combines the revised ERE scores, matched-test differences, and the repeated molecule-disjoint 10% control.
 

@@ -32,13 +32,13 @@ The main benchmark table uses the AptaBench folds. The source sensitivity experi
 
 ## Main ERE protocol revision
 
-The archived inputs reproduce the historical figures. The previous Random pairing and Hard negative implementation used the complete sequence table as its candidate pool. An audit of the released pools found test-exclusive sequences in both methods. The revised runner passes the positive sequences of each training fold as the candidate pool. The complete measured pair table serves as the exclusion set. Results that reused the older pools have the same provenance limitation.
+The previous Random pairing and Hard negative implementation used the complete sequence table as its candidate pool. An audit of the released pools found test-exclusive sequences in both methods. The revised runner passes the positive sequences of each training fold as the candidate pool. The complete measured pair table serves as the exclusion set. Results that reused the older pools have the same provenance limitation.
 
 The published Profile-GRU candidate CSV contains no split or fold identifiers. The pair audit checks the emitted pairs. Generator training provenance for the main ERE requires separate fold-level records. The revised architecture comparison below uses the published candidate pools.
 
-For the historical stratified comparison, the original main ERE and the later LightGBM run on exported negatives used different inputs. The revised LightGBM results supersede both as the benchmark reference. The updated Table 3 reports Blend and Fraction-retrain separately in the [cell summary](results/table3_summary.csv) and [fold scores](results/table3_fold_metrics.csv). The separate volume sweep retains its historical inputs.
+For the historical stratified comparison, the original main ERE and the later LightGBM run on exported negatives used different inputs. The revised LightGBM results supersede both as the benchmark reference. The updated Table 3 reports Blend and Fraction-retrain separately in the [cell summary](results/table3_summary.csv) and [fold scores](results/table3_fold_metrics.csv).
 
-The stratified LightGBM Profile-GRU result in the current paper's Table 4 is **0.669 ± 0.013 ROC-AUC** across five folds, computed from [ere_metrics.csv](results/ere_metrics.csv) at `split_type=random` and `train_negative=learned_generated`. The earlier **0.672 ± 0.017** appears only in the [archived Table 4 transcription](results/archived_table4_reported_summary.csv). The available archived runs do not reproduce that earlier value.
+The stratified LightGBM Profile-GRU result in the current paper's Table 4 is **0.669 ± 0.013 ROC-AUC** across five folds, computed from [ere_metrics.csv](results/ere_metrics.csv) at `split_type=random` and `train_negative=learned_generated`.
 
 To recalculate Table 3 from the repository root:
 
@@ -52,7 +52,7 @@ The summarizer validates both complete runs and checks that the 0% Blend values 
 
 The completed revised LightGBM run is recorded in [ere_metrics.csv](results/ere_metrics.csv), with 105 rows across 15 folds. The [paired audit](results/leakage_audit.csv) checks 90 synthetic training sets. The [released fold pools](../data/constructed_negatives/ere/by_fold/) are the exact pairs emitted by this run. Cross-negative scores and matched-test inflation are in [cross_negative_metrics.csv](results/cross_negative_metrics.csv) and [synthetic_inflation_metrics.csv](results/synthetic_inflation_metrics.csv).
 
-The `amplification_*.csv` files record the repeated-subset experiment on the revised ERE pools. Files with the `archived_amplification_` prefix preserve the earlier experiment. Profile-GRU candidates were precomputed. The 10% limit governs the measured negatives supplied directly to LightGBM.
+The `amplification_*.csv` files record the repeated-subset experiment on the revised ERE pools. Profile-GRU candidates were precomputed. The 10% limit governs the measured negatives supplied directly to LightGBM.
 
 ## Revised architecture comparison
 
@@ -64,7 +64,5 @@ python scripts/summarize_architecture_comparison.py
 The new protocol fits MLP, two-tower MLP and a CNN dual encoder for 20 epochs with seed 42. For each negative method, all architectures use the released revised training pool and the same five experimental test folds per split. The runner saves a CSV after every model fit and records the SHA-256 of its negative pool. The summary adds the 40 corresponding LightGBM scores and reports ROC-AUC and average precision.
 
 The revised Table 4 uses the [160 fold scores](results/architecture_fold_metrics.csv) and [32 summary rows](results/architecture_summary.csv).
-
-The [historical Table 4 transcription](results/archived_table4_reported_summary.csv) preserves the reported means and standard deviations. The files [archived_hybrid_mlp_metrics.csv](results/archived_hybrid_mlp_metrics.csv) and [archived_dual_encoder_metrics.csv](results/archived_dual_encoder_metrics.csv) preserve separate exploratory runs. These files do not establish the provenance of the original Table 4 numbers.
 
 See [Upstream assets](UPSTREAM_ASSETS.md) for checkpoint terms and attribution.

@@ -1,5 +1,0 @@
-mode,reference_mode,mean_delta,std_delta,n_pairs,frac_positive_delta
-exp_10_only,exp_10_only,0.0,0.0,50,0.0
-exp_10_oversample,exp_10_only,-0.0016046778904732673,0.009357262980025005,50,0.46
-exp_10_plus_rp,exp_10_only,-0.20940606840058495,0.09102252295865576,50,0.0
-exp_10_plus_generated,exp_10_only,-0.028057133687886156,0.02108369299626847,50,0.04

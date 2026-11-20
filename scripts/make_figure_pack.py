@@ -17,7 +17,6 @@ import seaborn as sns
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results" / "figures"
 INPUT = ROOT / "analyses" / "results"
-PREFIX = ""
 
 APTABENCH6 = [
     "random_sequence",
@@ -55,7 +54,7 @@ COLORS = {
 
 
 def _figure_input(name: str) -> pd.DataFrame:
-    frame = pd.read_csv(INPUT / f"{PREFIX}{name}")
+    frame = pd.read_csv(INPUT / name)
     if "skipped" in frame:
         frame = frame[~frame["skipped"].fillna(False).astype(bool)]
     return frame
@@ -115,7 +114,7 @@ def fig0_pipeline_schematic() -> None:
 
 def fig_ere_bars() -> None:
     df = _figure_input("ere_metrics.csv")
-    src_label = "Archived AptaBench ERE" if PREFIX else "AptaBench ERE"
+    src_label = "AptaBench ERE"
     auc_col = "test_roc_auc_experimental" if "test_roc_auc_experimental" in df.columns else "test_roc_auc"
     g = (
         df[df["train_negative"].isin(METHOD_ORDER)]
@@ -149,7 +148,7 @@ def fig_ere_bars() -> None:
 
 def fig_crossneg_heatmaps() -> None:
     df = _figure_input("cross_negative_metrics.csv")
-    src_label = "Archived AptaBench ERE" if PREFIX else "AptaBench ERE"
+    src_label = "AptaBench ERE"
     train_col = "train_negative" if "train_negative" in df.columns else "train_method"
     test_col = "test_negative" if "test_negative" in df.columns else "test_method"
     value = next(c for c in ("test_roc_auc", "roc_auc", "test_auc") if c in df.columns)
@@ -184,42 +183,6 @@ def fig_crossneg_heatmaps() -> None:
     _save(fig, "fig2_crossneg_heatmaps")
 
 
-def fig_mix_curves() -> None:
-    df = pd.read_csv(ROOT / "analyses" / "results" / "archived_mix_summary.csv")
-    methods = [m for m in APTABENCH6 if m in set(df["train_negative"])]
-    fig, axes = plt.subplots(1, 3, figsize=(12.8, 3.9), sharey=True)
-    for ax, split in zip(axes, SPLIT_ORDER):
-        sub = df[df["split_type"] == split]
-        if sub.empty:
-            ax.set_visible(False)
-            continue
-        for method in methods:
-            m = sub[sub["train_negative"] == method].sort_values("exp_fraction")
-            if m.empty:
-                continue
-            ax.errorbar(
-                m["exp_fraction"] * 100,
-                m["auc_mean"],
-                yerr=m["auc_std"].fillna(0),
-                marker="o",
-                ms=4,
-                lw=1.6,
-                color=COLORS.get(method, "#333333"),
-                label=LABELS[method],
-                capsize=2,
-            )
-        ax.set_title(SPLIT_TITLE.get(split, split))
-        ax.set_xlabel("% experimental supervision / mix fraction")
-        ax.set_xlim(-2, 102)
-        ax.set_ylim(0.15, 1.0)
-        ax.grid(True, alpha=0.35)
-    axes[0].set_ylabel("Test ROC-AUC")
-    if methods:
-        axes[-1].legend(fontsize=7, loc="lower right", frameon=True, ncol=1)
-    fig.suptitle("Mix experiment (fraction-retrain v2, scaled features)", y=1.03)
-    _save(fig, "fig3_mix_curves")
-
-
 def fig_methods_overview() -> None:
     fig, ax = plt.subplots(figsize=(10.5, 4.8))
     ax.set_xlim(0, 10)
@@ -250,33 +213,6 @@ def fig_methods_overview() -> None:
     ax.text(0.3, 4.85, "Six synthetic methods", fontsize=11, fontweight="bold")
     ax.text(0.3, 0.05, "Reference: experimental AptaBench label=0", fontsize=9, style="italic")
     _save(fig, "fig_methods_overview")
-
-
-def fig_negative_volume() -> None:
-    summary = pd.read_csv(ROOT / "analyses" / "results" / "archived_blend_volume_summary.csv")
-    volume = summary.loc[summary.arm.eq("volume")]
-    historical_ere = pd.read_csv(ROOT / "analyses" / "results" / "archived_ere_metrics.csv")
-    reference = historical_ere.loc[historical_ere.train_negative.eq("experimental")]
-    ref_means = reference.groupby("split_type").test_roc_auc.mean()
-    fig, axes = plt.subplots(1, 3, figsize=(12, 4.8), sharey=True)
-    for ax, split in zip(axes, SPLIT_ORDER):
-        for method in APTABENCH6:
-            rows = volume.loc[volume.split_type.eq(split) & volume.train_negative.eq(method)]
-            rows = rows.sort_values("syn_to_pos_ratio")
-            ax.errorbar(rows.syn_to_pos_ratio, rows.auc_mean, yerr=rows.auc_std, marker="o",
-                        color=COLORS[method], label=LABELS[method], capsize=2)
-        ax.set_title(SPLIT_TITLE[split])
-        ax.axhline(ref_means.loc[split], ls="--", color="0.35", label="Experimental reference")
-        ax.set_xscale("log", base=2)
-        ax.set_xticks([0.25, 0.5, 1, 2, 4], labels=["0.25", "0.5", "1", "2", "4"])
-        ax.grid(axis="y", alpha=0.2)
-    axes[0].set_ylabel("Experimental-test ROC-AUC")
-    fig.supxlabel("Synthetic negatives / training positives", y=0.19)
-    handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.005),
-               ncol=3, frameon=False)
-    fig.subplots_adjust(left=0.08, right=0.995, top=0.89, bottom=0.28, wspace=0.24)
-    _save(fig, "negative_volume")
 
 
 def fig_main_comparison() -> None:
@@ -367,13 +303,13 @@ def fig_main_comparison() -> None:
 
 
 def main() -> None:
-    global INPUT, PREFIX, OUT
+    global INPUT, OUT
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ere-inputs", type=Path, help="Directory containing a complete new ERE run")
     parser.add_argument("--out", type=Path, default=OUT)
     args = parser.parse_args()
     if args.ere_inputs:
-        INPUT, PREFIX = args.ere_inputs, ""
+        INPUT = args.ere_inputs
         metrics = _figure_input("ere_metrics.csv")
         metrics = metrics.loc[metrics.train_negative.isin(METHOD_ORDER)]
         counts = metrics.groupby(["split_type", "train_negative"]).fold.nunique()
@@ -387,8 +323,6 @@ def main() -> None:
     fig_ere_bars()
     fig_main_comparison()
     fig_crossneg_heatmaps()
-    fig_mix_curves()
-    fig_negative_volume()
     print("Wrote figures to", OUT)
     for p in sorted(OUT.glob("*")):
         print(" ", p.name)
