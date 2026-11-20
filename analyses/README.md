@@ -41,3 +41,16 @@ For the historical stratified comparison, the original main ERE and the later Li
 The completed revised LightGBM run is recorded in [ere_metrics.csv](results/ere_metrics.csv), with 105 rows across 15 folds. The [paired audit](results/leakage_audit.csv) checks 90 synthetic training sets. The [released fold pools](../data/constructed_negatives/ere_fold_local_v2/by_fold/) are the exact pairs emitted by this run. Cross-negative scores and matched-test inflation are in [cross_negative_metrics.csv](results/cross_negative_metrics.csv) and [synthetic_inflation_metrics.csv](results/synthetic_inflation_metrics.csv).
 
 The `amplification_*.csv` files record the repeated-subset experiment on the revised ERE pools. Files with the `archived_amplification_` prefix preserve the earlier experiment. Profile-GRU candidates were precomputed. The 10% limit governs the measured negatives supplied directly to LightGBM.
+
+## Revised architecture comparison
+
+```bash
+python scripts/run_architecture_comparison.py
+python scripts/summarize_architecture_comparison.py
+```
+
+The new protocol fits MLP, two-tower MLP and a CNN dual encoder for 20 epochs with seed 42. For each negative method, all architectures use the released revised training pool and the same five experimental test folds per split. The runner saves a CSV after every model fit and records the SHA-256 of its negative pool. The summary adds the 40 corresponding LightGBM scores and reports ROC-AUC and average precision.
+
+The [historical Table 4 transcription](results/archived_table4_reported_summary.csv) preserves the reported means and standard deviations. The files [archived_hybrid_mlp_metrics.csv](results/archived_hybrid_mlp_metrics.csv) and [archived_dual_encoder_metrics.csv](results/archived_dual_encoder_metrics.csv) preserve separate exploratory runs. These files do not establish the provenance of the original Table 4 numbers.
+
+See [Upstream assets](UPSTREAM_ASSETS.md) for checkpoint terms and attribution.
