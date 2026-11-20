@@ -36,6 +36,8 @@ The archived inputs reproduce the historical figures. The previous Random pairin
 
 The published Profile-GRU candidate CSV contains no split or fold identifiers. The pair audit checks the emitted pairs. Generator training provenance requires separate fold-level records. The architecture comparison requires the original fold-level outputs or a new matched rerun.
 
+For the historical stratified comparison, the original main ERE and the later LightGBM run on exported negatives used different inputs. The revised LightGBM results supersede both as the benchmark reference. The blend and fraction-retrain experiments are separate historical analyses.
+
 The completed revised LightGBM run is recorded in [ere_metrics.csv](results/ere_metrics.csv), with 105 rows across 15 folds. The [paired audit](results/leakage_audit.csv) checks 90 synthetic training sets. The [released fold pools](../data/constructed_negatives/ere_fold_local_v2/by_fold/) are the exact pairs emitted by this run. Cross-negative scores and matched-test inflation are in [cross_negative_metrics.csv](results/cross_negative_metrics.csv) and [synthetic_inflation_metrics.csv](results/synthetic_inflation_metrics.csv).
 
 The `amplification_*.csv` files record the repeated-subset experiment on the revised ERE pools. Files with the `archived_amplification_` prefix preserve the earlier experiment. Profile-GRU candidates were precomputed. The 10% limit governs the measured negatives supplied directly to LightGBM.

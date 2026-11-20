@@ -33,7 +33,7 @@ How much does the way we construct **synthetic non-binders** change an aptamerâ€
 | Structure-filtered | Filter candidate sequences by structure | Ligand counts for matching |
 | Random pairing | Rewire observed aptamers and ligands | Ligand counts; known pairs excluded |
 | Hard negative | Select difficult candidates with a fold-local scorer | Experimental negatives train the scorer |
-| Learned generated | Generate and rank sequences with a learned model | Experimental-negative profiles and contrastive supervision |
+| Profile-GRU | Rank precomputed sequence candidates for each fold | Experimental-negative profiles and contrastive supervision |
 
 The **experimental** row is a reference training condition, not a synthetic constructor. Except for that reference and explicit blend controls, the downstream classifier trains on emitted synthetic negatives.
 
