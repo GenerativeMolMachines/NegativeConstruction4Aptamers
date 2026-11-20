@@ -37,6 +37,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--no-lgbm-hard-score", action="store_true")
     p.add_argument("--blend-only", action="store_true")
     p.add_argument("--volume-only", action="store_true")
+    p.add_argument("--constructed-root", type=Path,
+                   help="Use exact released pools for the blend arm")
     return p.parse_args()
 
 
@@ -60,6 +62,7 @@ def main() -> None:
         lgbm_hard_score=not args.no_lgbm_hard_score,
         run_blend=not args.volume_only,
         run_volume=not args.blend_only,
+        constructed_root=args.constructed_root,
     )
     print(f"\nWrote {args.out}")
 

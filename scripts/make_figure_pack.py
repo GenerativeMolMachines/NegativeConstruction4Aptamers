@@ -9,6 +9,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.patches import FancyArrowPatch
+from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -274,6 +275,93 @@ def fig_negative_volume() -> None:
     _save(fig, "negative_volume")
 
 
+def fig_main_comparison() -> None:
+    """Render the three-panel paper figure from released numerical inputs."""
+    folds = _figure_input("ere_metrics.csv")
+    stats = folds.groupby(["split_type", "train_negative"]).test_roc_auc.agg(["mean", "std"])
+    molecule = folds.loc[folds.split_type.eq("molecule")].groupby("train_negative")[
+        ["test_roc_auc_experimental", "test_roc_auc_synthetic_matched"]
+    ].mean()
+    low = pd.read_csv(ROOT / "analyses/results/amplification_summary.csv").set_index("mode")
+    colors = dict.fromkeys(APTABENCH6, "#248e82")
+    colors.update(experimental="#6d6586", random_pairing="#414ba8",
+                  hard_negative="#414ba8", learned_generated="#de791d")
+    labels = dict(LABELS, random_sequence="Random sequence", composition_shuffle="AptaBLE shuffle",
+                  structure_filtered="Structure-filtered", hard_negative="Hard negatives")
+    fig, (a, b, c) = plt.subplots(1, 3, figsize=(17.3, 5.55),
+                                 gridspec_kw={"width_ratios": [1.08, 1, 1]})
+    fig.subplots_adjust(left=0.092, right=0.988, top=0.87, bottom=0.26, wspace=0.47)
+    for ax, title in zip((a, b, c), ("A   Experimental reference", "B   Synthetic-to-experimental transfer",
+                                    "C   10% experimental control")):
+        ax.set_title(title, loc="left", weight="bold", fontsize=12, pad=13)
+        ax.spines[["top", "right"]].set_visible(False)
+        ax.set_axisbelow(True)
+        ax.tick_params(length=3)
+        ax.grid(False)
+    order = ["experimental", "random_pairing", "learned_generated", "structure_filtered",
+             "random_sequence", "composition_shuffle", "hard_negative"]
+    a.axhspan(-0.43, 0.43, color=colors["experimental"], alpha=0.16, lw=0)
+    a.axvline(0.5, color="0.5", ls=":", lw=1.2)
+    markers = ("o", "s", "D")
+    for y, method in enumerate(order):
+        for split, marker, offset in zip(SPLIT_ORDER, markers, (-0.23, 0, 0.23)):
+            point = stats.loc[split, method]
+            a.errorbar(point["mean"], y + offset, xerr=point["std"], fmt=marker,
+                       color=colors[method], lw=1.6, capsize=3, ms=5)
+    a.set_yticks(range(len(order)), [labels[m] for m in order])
+    a.set_ylim(6.65, -0.65)
+    a.set_xlabel("Experimental-test ROC-AUC")
+    a.legend(handles=[Line2D([], [], marker=m, ls="", color="0.4", label=SPLIT_TITLE[s])
+                      for s, m in zip(SPLIT_ORDER, markers)], loc="upper center",
+             bbox_to_anchor=(0.5, -0.18), frameon=False, fontsize=8)
+
+    order = ["hard_negative", "composition_shuffle", "random_sequence", "structure_filtered",
+             "learned_generated", "random_pairing"]
+    for y, method in enumerate(order):
+        exp, syn = molecule.loc[method]
+        color = colors[method]
+        b.annotate("", xy=(syn, y), xytext=(exp, y),
+                   arrowprops={"arrowstyle": "-|>", "color": color, "lw": 1.8,
+                               "shrinkA": 4, "shrinkB": 4})
+        b.plot(exp, y, "o", mfc="white", mec=color, mew=1.8, ms=7)
+        b.plot(syn, y, "s", color=color, ms=6)
+        b.text((exp + syn) / 2, y - 0.17, f"{syn-exp:+.2f}", ha="center", color=color, weight="bold")
+    b.set_yticks(range(len(order)), [labels[m] for m in order])
+    b.set_ylim(5.65, -0.62)
+    b.set_xlabel("ROC-AUC (molecule-disjoint)")
+    b.legend(handles=[Line2D([], [], marker="o", mfc="white", mec="0.4", ls="", label="Experimental test"),
+                      Line2D([], [], marker="s", color="0.4", ls="", label="Matched synthetic test")],
+             loc="upper center", bbox_to_anchor=(0.5, -0.18), frameon=False, fontsize=8)
+    for ax in (a, b):
+        ax.set_xlim(0.14, 1.03)
+        ax.set_xticks([0.2, 0.4, 0.6, 0.8, 1.0])
+        ax.grid(axis="x", alpha=0.23)
+
+    modes = ["exp_10_only", "exp_10_oversample", "exp_10_plus_rp", "exp_10_plus_generated"]
+    reference = stats.loc["molecule", "experimental"]
+    mean, sd = reference["mean"], reference["std"]
+    c.axhspan(mean - sd, mean + sd, color=colors["experimental"], alpha=0.10, lw=0)
+    c.axhline(mean, color=colors["experimental"], ls="--", lw=1.5)
+    c.text(0.54, mean + 0.009, "100% experimental", transform=c.get_yaxis_transform(),
+           ha="center", color=colors["experimental"], fontsize=8)
+    for x, (mode, color, marker) in enumerate(zip(
+        modes, [colors[k] for k in ("experimental", "experimental", "random_pairing", "learned_generated")],
+        ("o", "o", "D", "P"),
+    )):
+        row = low.loc[mode]
+        c.errorbar(x, row.mean_roc_auc, yerr=row.std_roc_auc, fmt=marker,
+                   color=color, lw=1.6, capsize=4, ms=7)
+        c.text(x, row.mean_roc_auc + row.std_roc_auc + 0.012, f"{row.mean_roc_auc:.3f}",
+               ha="center", color=color, fontsize=9)
+    c.set_xticks(range(4), ["10% exp.\nonly", "10% exp.\noversampled",
+                            "10% exp. +\nRandom pairing", "10% exp. +\nProfile-GRU"], fontsize=8)
+    c.set_xlim(-0.48, 3.48)
+    c.set_ylim(0.54, 0.98)
+    c.set_ylabel("Experimental-test ROC-AUC")
+    c.grid(axis="y", alpha=0.23)
+    _save(fig, "fig_main_comparison")
+
+
 def main() -> None:
     global INPUT, PREFIX, OUT
     parser = argparse.ArgumentParser(description=__doc__)
@@ -293,6 +381,7 @@ def main() -> None:
     fig0_pipeline_schematic()
     fig_methods_overview()
     fig_ere_bars()
+    fig_main_comparison()
     fig_crossneg_heatmaps()
     fig_mix_curves()
     fig_negative_volume()

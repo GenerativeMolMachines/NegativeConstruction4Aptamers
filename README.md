@@ -66,6 +66,8 @@ Summary CSVs and interpretation are in [analyses/](analyses/). The commands writ
 
 Run `python scripts/07_make_figures.py` to regenerate the current ERE plots from the included CSVs. Use `--ere-inputs results/ere_fold_local_v2` to plot a new run. The volume and mix plots reproduce separate historical experiments.
 
+The three-panel paper figure is written to `results/figures/fig_main_comparison.pdf`. It combines the revised ERE scores, matched-test differences, and the repeated molecule-disjoint 10% control.
+
 ## Repository map
 
 | Path | Contents |

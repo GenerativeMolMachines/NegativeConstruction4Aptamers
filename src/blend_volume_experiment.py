@@ -118,6 +118,7 @@ def run_blend_volume_experiment(
     lgbm_hard_score: bool = True,
     run_blend: bool = True,
     run_volume: bool = True,
+    constructed_root: str | Path | None = None,
 ) -> pd.DataFrame:
     methods = [m for m in (methods or list(DEFAULT_METHODS)) if m != "experimental"]
     if not methods:
@@ -140,6 +141,7 @@ def run_blend_volume_experiment(
         "split_types": split_types,
         "blend_fractions": list(blend_fractions),
         "volume_ratios": list(volume_ratios),
+        "blend_constructed_root": str(constructed_root) if constructed_root is not None else None,
         "n_folds": n_folds,
         "seed": seed,
         "lgbm_hard_score": lgbm_hard_score,
@@ -169,7 +171,8 @@ def run_blend_volume_experiment(
             exp_test_eval = _labeled_eval(split.test_pos, split.test_neg_exp)
 
             hard_score_fn = None
-            if lgbm_hard_score and any(m in HARD_SCORE_METHODS for m in methods):
+            needs_generated_pool = run_volume or (run_blend and constructed_root is None)
+            if needs_generated_pool and lgbm_hard_score and any(m in HARD_SCORE_METHODS for m in methods):
                 try:
                     hard_score_fn = build_bootstrap_lgbm_scorer(
                         split.train_pos,
@@ -187,7 +190,7 @@ def run_blend_volume_experiment(
                     print(f"  WARNING: hard scorer unavailable: {exc}", flush=True)
 
             syn_pools: dict[str, pd.DataFrame] = {}
-            for method in methods:
+            for method in methods if needs_generated_pool else []:
                 score_fn = (
                     hard_score_fn
                     if method in HARD_SCORE_METHODS and hard_score_fn is not None
@@ -203,6 +206,7 @@ def run_blend_volume_experiment(
                         target_n=pool_n,
                         generated_path=str(generated_path),
                         score_fn=score_fn,
+                        candidate_positives=split.train_pos,
                     )
                     syn_pools[method] = neg_ds.frame.reset_index(drop=True)
                     print(
@@ -216,7 +220,13 @@ def run_blend_volume_experiment(
 
             if run_blend:
                 for method in methods:
-                    syn = syn_pools.get(method, pd.DataFrame())
+                    if constructed_root is None:
+                        syn = syn_pools.get(method, pd.DataFrame())
+                    else:
+                        path = Path(constructed_root) / "by_fold" / split_type / f"fold{fold}" / "train" / f"{method}.csv"
+                        syn = pd.read_csv(path)
+                        if len(syn) != target_n:
+                            raise ValueError(f"Expected {target_n} pairs in {path}, got {len(syn)}")
                     for frac in blend_fractions:
                         ck = _checkpoint_key(split_type, fold, method, "blend", float(frac))
                         if ck in done:
@@ -247,13 +257,16 @@ def run_blend_volume_experiment(
                             done.add(ck)
                             _save_checkpoint(out, pd.DataFrame(metric_rows), data_stats, meta)
                             continue
-                        train_neg, n_exp, n_syn = blend_train_negatives(
-                            split.train_neg_exp,
-                            syn,
-                            exp_fraction=float(frac),
-                            total_n=target_n,
-                            rng=rng,
-                        )
+                        if constructed_root is not None and float(frac) == 0:
+                            train_neg, n_exp, n_syn = syn, 0, len(syn)
+                        else:
+                            train_neg, n_exp, n_syn = blend_train_negatives(
+                                split.train_neg_exp,
+                                syn,
+                                exp_fraction=float(frac),
+                                total_n=target_n,
+                                rng=rng,
+                            )
                         metric_rows.append(
                             _eval_cell(
                                 row_base,
