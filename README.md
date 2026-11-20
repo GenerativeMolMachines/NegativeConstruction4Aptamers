@@ -84,7 +84,7 @@ The three-panel paper figure is written to `results/figures/fig_main_comparison.
 
 - AptaBench aptamer- and molecule-disjoint folds can share assays and database sources across train and test. The source sensitivity analysis holds out a database source within each AptaBench fold.
 - Across ten redraws per molecule-disjoint fold, the 10%-only control gives ROC-AUC **0.826 ± 0.070**. Oversampling gives **0.824 ± 0.072**, adding Profile-GRU **0.802 ± 0.065**, and adding Random pairing **0.678 ± 0.095**. Synthetic augmentation uses the revised ERE pools. Redraws share test folds. The 10% limit applies to measured negatives supplied directly to LightGBM. [Summary and paired differences](analyses/).
-- The revised comparison holds the LightGBM classifier fixed. Other architectures require evaluation on the revised pools.
+- The main comparison holds the LightGBM classifier fixed. The [architecture comparison](analyses/results/architecture_summary.csv) evaluates LightGBM, MLP, two-tower MLP, and a CNN dual encoder on the same revised pools for stratified and molecule-disjoint splits.
 
 ## License and data
 
