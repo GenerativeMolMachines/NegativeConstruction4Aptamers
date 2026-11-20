@@ -154,7 +154,10 @@ def fig_crossneg_heatmaps() -> None:
     test_col = "test_negative" if "test_negative" in df.columns else "test_method"
     value = next(c for c in ("test_roc_auc", "roc_auc", "test_auc") if c in df.columns)
     methods = [m for m in METHOD_ORDER if m in set(df[train_col]) | set(df[test_col])]
-    fig, axes = plt.subplots(1, 3, figsize=(13.8, 4.2))
+    fig = plt.figure(figsize=(13.8, 4.5), layout="constrained")
+    grid = fig.add_gridspec(1, 4, width_ratios=[1, 1, 1, 0.045])
+    axes = [fig.add_subplot(grid[0, index]) for index in range(3)]
+    color_axis = fig.add_subplot(grid[0, 3])
     for ax, split in zip(axes, SPLIT_ORDER):
         sub = df[df["split_type"] == split]
         pivot = sub.groupby([train_col, test_col])[value].mean().unstack()
@@ -169,14 +172,15 @@ def fig_crossneg_heatmaps() -> None:
             fmt=".2f",
             annot_kws={"size": 7},
             cbar=split == "molecule",
+            cbar_ax=color_axis if split == "molecule" else None,
             square=True,
             xticklabels=[LABELS.get(m, m) for m in methods],
-            yticklabels=[LABELS.get(m, m) for m in methods],
+            yticklabels=[LABELS.get(m, m) for m in methods] if split == "random" else False,
         )
         ax.set_title(SPLIT_TITLE[split])
         ax.set_xlabel("Test negatives")
         ax.set_ylabel("Train negatives" if split == "random" else "")
-    fig.suptitle(f"Cross-negative evaluation (ROC-AUC) — {src_label}", y=1.03)
+    fig.suptitle(f"Cross-negative evaluation (ROC-AUC) — {src_label}")
     _save(fig, "fig2_crossneg_heatmaps")
 
 

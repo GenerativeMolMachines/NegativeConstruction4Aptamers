@@ -723,6 +723,17 @@ def _deduplicate_latent_points(points: np.ndarray, ndigits: int = 4) -> np.ndarr
     """Drop exact/near-duplicate latent rows before diversity selection."""
     if len(points) == 0:
         return points
+    if np.isfinite(points).all():
+        rounded = np.round(np.asarray(points, dtype=np.float32), ndigits)
+        rounded[rounded == 0] = 0.0
+        seen = set()
+        keep = []
+        for index, point in enumerate(rounded):
+            key = point.tobytes()
+            if key not in seen:
+                seen.add(key)
+                keep.append(index)
+        return np.asarray(points, dtype=np.float32)[keep]
     unique = []
     seen = set()
     for point in points:
@@ -1488,6 +1499,8 @@ def build_generation_target_from_dataframe(
     device,
     global_negative_latents=None,
     smiles_col=None,
+    *,
+    local_negative_override=None,
 ):
     """
     Собирает generation target из CSV, если молекула не попала в test split.
@@ -1498,7 +1511,7 @@ def build_generation_target_from_dataframe(
     if not smi_emb_cols or not seq_emb_cols:
         return None
 
-    work = df.copy()
+    work = df
     work_smiles = work[smiles_col].astype(str)
     exact_rows = work[work_smiles == str(target_smiles).strip()]
     if exact_rows.empty:
@@ -1516,8 +1529,11 @@ def build_generation_target_from_dataframe(
         mol_t = torch.tensor(raw_mol, dtype=torch.float32, device=device).unsqueeze(0)
         mol_emb = contrastive_model.encode_molecule(mol_t).cpu().numpy()[0]
 
-        neg_rows = work[(work_smiles == smiles) & (work["label"] == 0)]
-        if not neg_rows.empty:
+        neg_rows = None if local_negative_override is not None else work[(work_smiles == smiles) & (work["label"] == 0)]
+        if local_negative_override is not None:
+            local_neg = local_negative_override
+            neg_source = "fold_supervision_pool"
+        elif not neg_rows.empty:
             neg_t = torch.tensor(
                 neg_rows[seq_emb_cols].values.astype(np.float32),
                 dtype=torch.float32,

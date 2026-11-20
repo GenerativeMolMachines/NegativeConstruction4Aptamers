@@ -260,12 +260,20 @@ def run_blend_volume_experiment(
                         if constructed_root is not None and float(frac) == 0:
                             train_neg, n_exp, n_syn = syn, 0, len(syn)
                         else:
+                            # The released-pool blend uses reproducible draws after a restart.
+                            # Sharing the seed across methods also shares the experimental draw.
+                            cell_rng = (
+                                np.random.default_rng(np.random.SeedSequence([
+                                    seed, SPLIT_TYPES.index(split_type), fold, round(float(frac) * 1000),
+                                ]))
+                                if constructed_root is not None else rng
+                            )
                             train_neg, n_exp, n_syn = blend_train_negatives(
                                 split.train_neg_exp,
                                 syn,
                                 exp_fraction=float(frac),
                                 total_n=target_n,
-                                rng=rng,
+                                rng=cell_rng,
                             )
                         metric_rows.append(
                             _eval_cell(

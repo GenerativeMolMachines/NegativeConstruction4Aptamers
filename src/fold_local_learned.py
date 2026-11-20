@@ -488,11 +488,10 @@ def generate_fraction_local_pairs(
             contrastive_model=model,
             device=dev,
             global_negative_latents=local_neg_latents,
+            local_negative_override=local_neg_latents if local_neg_latents.size else None,
         )
         if built is None:
             continue
-        if local_neg_latents.size:
-            built["local_negative_latents"] = local_neg_latents
         try:
             raw_cands = generate_ranked_aptamers_for_molecule(
                 decoder=decoder,

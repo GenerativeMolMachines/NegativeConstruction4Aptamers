@@ -8,6 +8,8 @@
 [![Dataset](https://img.shields.io/badge/Dataset-AptaBench-269e91)](https://github.com/GenerativeMolMachines/AptaBench)
 [![Code license](https://img.shields.io/badge/Code%20License-MIT-green)](LICENSE)
 
+Results updated 20 November 2026. [Paper PDF](paper/neurips_2026.pdf) · [Table 3 summary](analyses/results/table3_summary.csv) · [Table 3 fold scores](analyses/results/table3_fold_metrics.csv).
+
 ## About
 
 How much does the way we construct **synthetic non-binders** change an aptamer–small molecule interaction model? This repository compares six constructors on AptaBench. Experimental positives, held-out experimental test pairs, AptaBench folds, and the main LightGBM pipeline stay fixed; only the training negatives change.

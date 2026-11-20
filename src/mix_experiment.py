@@ -164,7 +164,8 @@ def run_mix_experiment(
     mix_fractions = tuple(mix_fractions or DEFAULT_MIX_FRACTIONS)
     rng = np.random.default_rng(seed)
     df, data_stats = load_aptabench_indexed_pairs(data_path)
-    raw_df = pd.read_csv(data_path, low_memory=False)
+    raw_df = (pd.read_parquet(data_path) if Path(data_path).suffix.lower() == ".parquet"
+              else pd.read_csv(data_path, low_memory=False))
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
 
@@ -186,6 +187,11 @@ def run_mix_experiment(
             exp_test_eval = _labeled_eval(split.test_pos, split.test_neg_exp)
 
             for frac in mix_fractions:
+                if all(_checkpoint_key(split_type, fold, method, frac) in done for method in methods):
+                    continue
+                rng = np.random.default_rng(np.random.SeedSequence([
+                    seed, SPLIT_TYPES.index(split_type), fold, round(float(frac) * 1000),
+                ]))
                 supervision_neg = supervision_negatives_at_fraction(
                     split.train_neg_exp, float(frac), rng
                 )
@@ -296,6 +302,7 @@ def run_mix_experiment(
                                 target_n=target_n,
                                 generated_path=str(generated_path),
                                 score_fn=score_fn,
+                                candidate_positives=split.train_pos,
                             )
                             notes = neg_ds.notes or ""
 
