@@ -4,7 +4,8 @@
 
 # Evaluating Negative Construction for Aptamer–Small Molecule Interaction Learning
 
-[![NeurIPS 2026](https://img.shields.io/badge/NeurIPS%202026-AIDaR%20poster-204a70)](#about)
+[![NeurIPS 2026](https://img.shields.io/badge/NeurIPS%202026-AIDaR%20poster-204a70)](https://neurips.cc/virtual/2026/loc/paris/162339)
+[![OpenReview](https://img.shields.io/badge/OpenReview-Paper-b31b1b)](https://openreview.net/forum?id=kUDLY2pyES)
 [![Dataset](https://img.shields.io/badge/Dataset-AptaBench-269e91)](https://github.com/GenerativeMolMachines/AptaBench)
 [![Code license](https://img.shields.io/badge/Code%20License-MIT-green)](LICENSE)
 
