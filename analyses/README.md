@@ -51,6 +51,8 @@ python scripts/summarize_architecture_comparison.py
 
 The new protocol fits MLP, two-tower MLP and a CNN dual encoder for 20 epochs with seed 42. For each negative method, all architectures use the released revised training pool and the same five experimental test folds per split. The runner saves a CSV after every model fit and records the SHA-256 of its negative pool. The summary adds the 40 corresponding LightGBM scores and reports ROC-AUC and average precision.
 
+The revised Table 4 uses the [160 fold scores](results/architecture_fold_metrics.csv) and [32 summary rows](results/architecture_summary.csv).
+
 The [historical Table 4 transcription](results/archived_table4_reported_summary.csv) preserves the reported means and standard deviations. The files [archived_hybrid_mlp_metrics.csv](results/archived_hybrid_mlp_metrics.csv) and [archived_dual_encoder_metrics.csv](results/archived_dual_encoder_metrics.csv) preserve separate exploratory runs. These files do not establish the provenance of the original Table 4 numbers.
 
 See [Upstream assets](UPSTREAM_ASSETS.md) for checkpoint terms and attribution.
