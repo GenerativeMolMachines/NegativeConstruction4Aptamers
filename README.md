@@ -27,14 +27,16 @@ How much does the way we construct **synthetic non-binders** change an aptamerâ€
 3. Construct training negatives using only permitted fold-local information.
 4. Fit the same classifier and evaluate on the same experimental test pairs.
 
-| Synthetic constructor | Core idea | Experimental-negative information used by the constructor |
-|---|---|---|
-| Random sequence | Generate decoy sequences | Ligand counts for matching |
-| Composition shuffle | Shuffle aptamers while preserving composition | Ligand counts for matching |
-| Structure-filtered | Filter candidate sequences by structure | Ligand counts for matching |
-| Random pairing | Rewire observed aptamers and ligands | Ligand counts; known pairs excluded |
-| Hard negative | Select difficult candidates with a fold-local scorer | Experimental negatives train the scorer |
-| Profile-GRU | Rank precomputed sequence candidates for each fold | Experimental-negative profiles and contrastive supervision |
+| Constructor in the paper | ID in code and CSV | Core idea | Experimental-negative information used by the constructor |
+|---|---|---|---|
+| Random sequence | `random_sequence` | Generate decoy sequences | Ligand counts for matching |
+| AptaBLE shuffle | `composition_shuffle` | Shuffle aptamers while preserving composition | Ligand counts for matching |
+| Structure-filtered | `structure_filtered` | Filter candidate sequences by structure | Ligand counts for matching |
+| Random pairing | `random_pairing` | Rewire observed aptamers and ligands | Ligand counts; known pairs excluded |
+| Hard negatives | `hard_negative` | Select difficult candidates with a fold-local scorer | Experimental negatives train the scorer |
+| Profile-GRU | `learned_generated` | Rank precomputed sequence candidates for each fold | Experimental-negative profiles and contrastive supervision |
+
+The split IDs `random`, `aptamer`, and `molecule` correspond to Stratified, Aptamer-disjoint, and Molecule-disjoint in the paper.
 
 The **experimental** row is a reference training condition, not a synthetic constructor. Except for that reference and explicit blend controls, the downstream classifier trains on emitted synthetic negatives.
 
@@ -74,7 +76,8 @@ The three-panel paper figure is written to `results/figures/fig_main_comparison.
 | Path | Contents |
 |---|---|
 | [data/aptabench/](data/aptabench/) | AptaBench table, split indices, embeddings, and generation input |
-| [Revised fold pools](data/constructed_negatives/ere_fold_local_v2/by_fold/) | Negative sets used by the revised LightGBM run |
+| [Revised fold pools](data/constructed_negatives/ere_fold_local_v2/by_fold/) | Negative sets used for the current ERE results |
+| [Archived fold pools](data/constructed_negatives/ere_aptabench_scaled_v1/) | Earlier experiment inputs retained for historical comparison |
 | [src/](src/) | Constructors, data loading, ERE, and analysis code |
 | [contrastive/](contrastive/) | Contrastive model and GRU generation code |
 | [scripts/](scripts/) | Reproduction commands |
